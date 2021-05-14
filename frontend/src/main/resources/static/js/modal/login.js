@@ -57,18 +57,14 @@ $(document).ready(function() {
 })
 
 $(document).ready(function() {
-	$(".close").on("click", function() {
 
-		$(document).ready(function() {
-
-			$('#login-form').trigger("reset");
-			$(".alert").remove();
-
-			$('.modal').on('hidden.bs.modal', function() {
-				validator.resetForm();
-			});
-		});
+	$('#popup-modal').on('hidden.bs.modal', function() {
+		var $alertas = $('#login-form');
+		$alertas.validate().resetForm();
+		$alertas.find('.error').removeClass('error');
+		$('#login-form').trigger("reset");
 	});
+
 })
 
 function login(formData) {
@@ -125,4 +121,5 @@ function login(formData) {
 	}
 	return false;
 }
+
 
