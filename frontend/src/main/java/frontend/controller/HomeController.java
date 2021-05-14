@@ -26,16 +26,27 @@ public class HomeController {
 
 	@GetMapping("/register")
 	public ModelAndView register() {
-
+		int cnt = 1;
+		if (cnt == 1)
+			throw new NullPointerException("Exception");
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("index");
-
 		return mv;
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody UserCredential userCredential, HttpServletRequest request, Error result)
+	public ResponseEntity<?> login(@RequestBody UserCredential userCredential, HttpServletRequest request)
 			throws JsonProcessingException {
+
+		return null;
+	}
+
+	@GetMapping("/logout")
+	public ResponseEntity<?> logout(HttpServletRequest request) throws JsonProcessingException {
+
+		String tocken = request.getHeader("Authorization");
+
+		System.out.println("Log out");
 
 		return null;
 	}

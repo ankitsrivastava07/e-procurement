@@ -17,7 +17,6 @@ body { background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAA
     </style>
     <body>
     
-    
 <div class="container">
     <div class="row">
         <div class="col-md-12">
