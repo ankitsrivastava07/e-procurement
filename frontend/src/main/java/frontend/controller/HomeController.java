@@ -63,6 +63,8 @@ public class HomeController {
 
 			model.addObject("userName", username);
 
+//			RequestDispatcher dispatcher = request.getServletContext();
+
 			// RequestDispatcher dispatcher = request.getServletContext();
 
 		}
