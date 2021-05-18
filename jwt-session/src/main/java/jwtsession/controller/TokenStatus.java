@@ -13,5 +13,6 @@ public class TokenStatus {
 	private String message;
 
 	private String token;
+	
 	private String firstName;
 }

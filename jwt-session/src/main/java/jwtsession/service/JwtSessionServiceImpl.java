@@ -15,12 +15,11 @@ public class JwtSessionServiceImpl implements JwtSessionService {
 	private ObjectTranslator objectTranslator;
 
 	@Autowired
-	JwtSessionDao jwtSessionDao;
+	private JwtSessionDao jwtSessionDao;
 
 	@Override
-	public Boolean isValidToken(String jwt) {
-		jwtSessionDao.isValidToken(jwt);
-		return null;
+	public String getUsername(String jwt) {
+		return jwtSessionDao.getUsername(jwt);
 	}
 
 	@Override

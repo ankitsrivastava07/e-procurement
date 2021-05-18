@@ -1,4 +1,7 @@
-<!------ Include the above in your HEAD tag ---------->
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
 <div class="modal show" tabindex="-1" role="dialog"  id="popup-modal" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -29,4 +32,7 @@
     </div>
  </div>
 </div>
-</form>     
+</form>
+     
+</body>
+</html>

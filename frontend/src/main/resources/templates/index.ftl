@@ -200,7 +200,11 @@ border: #4a90e2;
           <li class="active"><a href="/home">Home</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#services">Services</a></li>
-          <li><a href="" id="loginModalPop" data-toggle="modal">Login</a>
+          <#if userName?has_content>
+          <li><a href="" id="loginModalPop" data-toggle="modal">${userName}</a>
+          <#else>
+          <a href="" id="loginModalPop" data-toggle="modal">Login</a>
+          </#if>
           <li><a href="/register">Register</a></li>
 
         </ul>
@@ -367,7 +371,7 @@ border: #4a90e2;
             <div class="icon-box">
               <div class="icon"><i class="bx bxl-dribbble"></i></div>
               <h4><a href="">Lorem Ipsum</a></h4>
-              <p>Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
+              <p>Voluptatum deleniti atque corruption quos dolores et quas molestias excepturi</p>
             </div>
           </div>
 

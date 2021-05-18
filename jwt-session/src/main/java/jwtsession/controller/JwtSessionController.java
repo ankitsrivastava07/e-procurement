@@ -51,19 +51,19 @@ public class JwtSessionController {
 	}
 
 	@PostMapping("/validate-token")
-	public ResponseEntity<?> isValidToken(@RequestBody(required = true) String jwt, HttpServletRequest request) {
-
-		String userName = jwtTokenUtil.getUsernameFromToken(jwt);
+	public ResponseEntity<?> getUsernameFromToken(@RequestBody(required = true) String jwt,
+			HttpServletRequest request) {
 
 		jwtTokenUtil.validateToken(jwt);
 
-		Boolean flag = jwtSessionService.isValidToken(jwt);
+		String userName = jwtSessionService.getUsername(jwt);
 
-		System.out.println(flag);
+		System.out.println(userName);
 
-		tokenStatus.setMessage("Invalid token");
-		tokenStatus.setStatus(Boolean.FALSE);
+		tokenStatus.setMessage("Valid token");
+		tokenStatus.setStatus(Boolean.TRUE);
 		tokenStatus.setToken(jwt);
+		tokenStatus.setFirstName(userName);
 
 		return new ResponseEntity<>(tokenStatus, HttpStatus.OK);
 	}

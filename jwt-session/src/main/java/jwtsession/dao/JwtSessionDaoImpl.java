@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import jwtsession.dao.entity.JwtSessionEntity;
 import jwtsession.dao.repository.JwtSessionRepository;
+import jwtsession.exceptionHandle.InvalidTokenException;
 
 @Repository
 public class JwtSessionDaoImpl implements JwtSessionDao {
@@ -13,8 +14,14 @@ public class JwtSessionDaoImpl implements JwtSessionDao {
 	JwtSessionRepository repository;
 
 	@Override
-	public Boolean isValidToken(String jwt) {
-		return repository.findBytoken(jwt) == null ? false : true;
+	public String getUsername(String jwt) {
+
+		String username = repository.findBytoken(jwt).getUserName();
+
+		if (username == null)
+			throw new InvalidTokenException("Invalid Token or token does not exist");
+
+		return repository.findBytoken(jwt).getUserName();
 	}
 
 	@Override

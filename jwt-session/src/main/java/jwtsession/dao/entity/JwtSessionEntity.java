@@ -29,7 +29,7 @@ public class JwtSessionEntity {
 	private LocalDateTime createdAt;
 
 	@PrePersist
-	public void onPrePersist() {
+	public void prePersist() {
 		this.createdAt = LocalDateTime.now();
 	}
 }

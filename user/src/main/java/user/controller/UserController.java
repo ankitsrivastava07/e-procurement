@@ -15,7 +15,7 @@ import user.service.UserService;
 import user.service.UserServiceProxy;
 
 @RestController
-@RequestMapping("e-procurement")
+@RequestMapping("users")
 public class UserController {
 
 	@Autowired
@@ -28,7 +28,7 @@ public class UserController {
 	JwtTokenUtil jwtTokenUtil;
 
 	@PostMapping("/login")
-	public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody UserCredential userCredentail,
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody UserCredential userCredentail,
 			HttpServletResponse response) throws Exception {
 
 		UserEntity entity = userService.findByUserNameAndPassword(userCredentail.getUserName(),

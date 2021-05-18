@@ -81,34 +81,9 @@ function login(formData) {
 
 				$(".alert").remove();
 
-				if (!response.status) {
-					//	$("#login-form").prepend(("<div class='alert alert-danger' role='alert'>" + response.message + "</div>"));
-
-					setTimeout(function() {
-						$(".modal-body").prepend(("<div class='alert alert-danger' role='alert'>" + response.message + "</div>"));
-					}, 500);
-
-				}
-				if (response.status == true) {
-					if (!!$.cookie('session_Tocken')) {
-						$(".modal-body").prepend(("<div class='alert alert-success' role='alert'>" + response.message + "  Tocken created in cookies" + "</div>"));
-						token = $.cookie('session_Tocken', response.token);
-
-						setTimeout(function() {
-							$(".alert").remove();
-						}, 4000);
-
-
-					}
-					else {
-						var token = $.cookie('session_Tocken', xhr.getResponseHeader('Authorization'), { expires: 1 });
-						$.cookie('session_Tocken', response.token);
-						alert(response.token)
-					}
-				}
-
-			},
-			complete: function(response) {
+				setTimeout(function() {
+					$(".modal-body").prepend(("<div class='alert alert-danger' role='alert'>" + response.message + "</div>"));
+				}, 500);
 
 			},
 			error: function(error) {
