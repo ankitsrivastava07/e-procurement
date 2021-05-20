@@ -6,5 +6,5 @@ import lombok.Data;
 public class JwtSessionDto {
 
 	private String token;
-	private String username;
+	private Long userId;
 }

@@ -22,6 +22,10 @@ public class JwtTokenUtil {
 		return getClaimFromToken(token, Claims::getSubject);
 	}
 
+	public Long getUserId(String token) {
+		return Long.valueOf(getClaimFromToken(token, Claims::getSubject));
+	}
+
 	public Date getExpirationDateFromToken(String token) {
 		return getClaimFromToken(token, Claims::getExpiration);
 	}
@@ -40,14 +44,15 @@ public class JwtTokenUtil {
 		return expiration.before(new Date());
 	}
 
-	public String generateToken(String username) {
+	public String generateToken(String username, Long userId) {
 		Map<String, Object> claims = new HashMap<>();
-		return doGenerateToken(claims, username);
+		return doGenerateToken(claims, username, userId);
 	}
 
-	private String doGenerateToken(Map<String, Object> claims, String subject) {
+	private String doGenerateToken(Map<String, Object> claims, String subject, Long userId) {
 
-		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+		return Jwts.builder().setClaims(claims).setSubject(subject).setSubject(String.valueOf(userId))
+				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
 				.signWith(SignatureAlgorithm.HS512, secret).compact();
 	}

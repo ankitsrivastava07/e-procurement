@@ -185,8 +185,6 @@ border: #4a90e2;
 </style>
 <body>
 
-<#include "login.ftl">
-
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
@@ -201,11 +199,15 @@ border: #4a90e2;
           <li><a href="#about">About</a></li>
           <li><a href="#services">Services</a></li>
           <#if userName?has_content>
-          <li><a href="" id="loginModalPop" data-toggle="modal">${userName}</a>
-          <#else>
-          <a href="" id="loginModalPop" data-toggle="modal">Login</a>
-          </#if>
+           <li class="drop-down"><a href="">${userName}</a>
+            <ul>
+              <li><a href="/logout">Sign Out</a></li>
+              </li>
+          
+         <#else>
+          <li><a href="/login">Login</a></li>
           <li><a href="/register">Register</a></li>
+          </#if>
 
         </ul>
       </nav><!-- .nav-menu -->

@@ -82,7 +82,7 @@ function login(formData) {
 				$(".alert").remove();
 
 				setTimeout(function() {
-					$(".modal-body").prepend(("<div class='alert alert-danger' role='alert'>" + response.message + "</div>"));
+					$(".modal-body").prepend(("<div class='alert alert-danger' role='alert'>" + response + "</div>"));
 				}, 500);
 
 			},
@@ -96,5 +96,3 @@ function login(formData) {
 	}
 	return false;
 }
-
-

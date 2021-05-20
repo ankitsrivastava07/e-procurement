@@ -9,5 +9,7 @@ public interface FrontendService {
 
 	void setCookie(HttpServletRequest request, HttpServletResponse response, LoginStatus token);
 
-	String isTokenExist(HttpServletRequest request);
+	String isValidToken(HttpServletRequest request);
+	
+	 void invalidateToken(HttpServletRequest request);
 }

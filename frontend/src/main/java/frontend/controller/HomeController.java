@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,14 +37,14 @@ public class HomeController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("index");
 
-		String username = frontendService.isTokenExist(request);
+		String username = frontendService.isValidToken(request);
 
 		model.addObject("userName", username);
 
 		return model;
 	}
 
-	@PostMapping("/login")
+	@RequestMapping(value = "/login", method = { RequestMethod.POST})
 	public ResponseEntity<?> login(@RequestBody UserCredential userCredential, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 
@@ -54,32 +54,23 @@ public class HomeController {
 
 		if (loginStatus.isStatus()) {
 			frontendService.setCookie(request, response, loginStatus);
-			homeControllerProxy.home();
-
 			ModelAndView model = new ModelAndView();
-			model.setViewName("index");
-
-			String username = frontendService.isTokenExist(request);
-
-			model.addObject("userName", username);
-
-//			RequestDispatcher dispatcher = request.getServletContext();
-
-			// RequestDispatcher dispatcher = request.getServletContext();
-
+			model.addObject("userName", loginStatus.getFirstName());
 		}
 
-		return new ResponseEntity<>(loginStatus, HttpStatus.OK);
+		return new ResponseEntity<>(loginStatus.getMessage(),HttpStatus.OK);
+
 	}
 
 	@GetMapping("/logout")
-	public ResponseEntity<?> logout(HttpServletRequest request) throws JsonProcessingException {
-
-		String tocken = request.getHeader("Authorization");
+	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response)
+			throws JsonProcessingException {
 
 		System.out.println("Log out");
 
-		return null;
+		frontendService.invalidateToken(request);
+
+		return new ModelAndView("redirect:" + "/");
 	}
 
 	@GetMapping("/register")
@@ -88,4 +79,12 @@ public class HomeController {
 		mv.setViewName("index");
 		return mv;
 	}
+	
+	@GetMapping("/login")
+	public ModelAndView login() {
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("login");
+		return mv;
+	}
+	
 }

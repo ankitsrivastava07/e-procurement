@@ -1,10 +1,13 @@
 package jwtsession.service;
 
 import jwtsession.controller.JwtSessionDto;
+import jwtsession.controller.TokenStatus;
 
 public interface JwtSessionService {
 
-	String getUsername(String jwt);
+	TokenStatus isValidToken(String jwt);
 
-	String saveToken(JwtSessionDto tokenDto);
+	TokenStatus saveToken(JwtSessionDto tokenDto);
+
+	TokenStatus removeToken(String token);
 }

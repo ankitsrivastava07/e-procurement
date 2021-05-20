@@ -10,4 +10,6 @@ public class LoginStatus {
 	private String message;
 
 	private String token;
+	
+	private String firstName;
 }

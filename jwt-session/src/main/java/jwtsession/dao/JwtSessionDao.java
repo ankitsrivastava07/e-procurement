@@ -4,7 +4,9 @@ import jwtsession.dao.entity.JwtSessionEntity;
 
 public interface JwtSessionDao {
 
-	String getUsername(String jwt);
+	Boolean isValidToken(String jwt);
 
 	String saveToken(JwtSessionEntity entity);
+	
+	JwtSessionEntity removeToken(String token);
 }
