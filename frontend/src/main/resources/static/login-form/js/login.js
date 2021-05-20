@@ -77,22 +77,32 @@ function login(formData) {
 			url: "/login",
 			contentType: "application/json",
 			data: JSON.stringify(formData),
-			success: function(response, status, xhr) {
+			cache: false,
+			beforeSend: function() {
+				$(".alert").remove();
+			},
+			success: function(response) {
+			},
+			complete: function(response) {
 
 				$(".alert").remove();
-
 				setTimeout(function() {
-					$(".modal-body").prepend(("<div class='alert alert-danger' role='alert'>" + response + "</div>"));
+					$(".modal-body").prepend(("<div class='alert alert-danger' role='alert'>" + response.responseText + "</div>"));
 				}, 500);
-
 			},
 			error: function(error) {
 				alert("Something went wrong  please try again later")
-				//loginPopClose();
-				//$('.modal').modal('hide');
-
 			}
 		})
 	}
 	return false;
 }
+
+$(document).ready(function() {
+	$(window).keydown(function(event) {
+		if (event.which == 13) {
+			event.preventDefault();
+			return false;
+		}
+	});
+});

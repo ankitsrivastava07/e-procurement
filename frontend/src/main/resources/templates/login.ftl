@@ -29,7 +29,7 @@
 display: block;
     width: 100%;
     padding: .375rem .75rem;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 400;
     line-height: 1.5;
     color: #495057;
@@ -74,7 +74,7 @@ background-color: #fdf6f6;
 			<div class="modal-body" id="modal1-body">
 		      		<div class="form-group">
 		      		<label for="recipient-name" class="col-form-label">Email ID / Username </label>
-		      			<input type="text" class="form-control rounded-left" maxlength="100" name="userName" id="userName" autocomplete=off Placeholder="Enter your email/username">
+		      			<input type="text" class="form-control rounded-left" maxlength="30" name="userName" id="userName" autocomplete=off Placeholder="Enter your email/username">
 		      		</div>
 	            <div class="form-group">
 	            <label for="recipient-name" class="col-form-label">Password</label>
