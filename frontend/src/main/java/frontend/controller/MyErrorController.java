@@ -25,7 +25,6 @@ public class MyErrorController implements ErrorController {
 			else if (statusCode == HttpStatus.TOO_MANY_REQUESTS.value())
 				return new ModelAndView("error/error-429");
 			
-
 			else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value())
 				return new ModelAndView("error/error-500");
 			

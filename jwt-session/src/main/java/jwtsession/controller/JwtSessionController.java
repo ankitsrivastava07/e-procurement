@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import jwtsession.jwtutil.JwtTokenUtil;
 import jwtsession.service.JwtSessionService;
 
@@ -24,17 +25,13 @@ public class JwtSessionController {
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
-	@PostMapping("/change-password")
-	public void changePassword(HttpServletRequest request) {
-
-	}
-
+	
 	@PostMapping("/save-token")
-	public ResponseEntity<?> saveToken(@RequestBody JwtSessionDto tokenDto) {
+	public ResponseEntity<?> saveToken(@RequestBody String token) {
 
-		TokenStatus tokenStatus = jwtSessionService.saveToken(tokenDto);
+		TokenStatus tokenStatus = jwtSessionService.saveToken(token);
 
-		System.out.println(tokenDto);
+		System.out.println(token);
 
 		return new ResponseEntity<>(tokenStatus, HttpStatus.OK);
 
@@ -52,6 +49,13 @@ public class JwtSessionController {
 	public ResponseEntity<?> invalidateToken(@RequestBody String token) {
 
 		TokenStatus tokenStatus = jwtSessionService.removeToken(token);
+		return new ResponseEntity<>(tokenStatus, HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/invalidate-tokens")
+	public ResponseEntity<?> invalidateTokens(@RequestBody String token, HttpServletRequest request) {
+		Long id=jwtTokenUtil.getUserId(token);
+		TokenStatus tokenStatus = jwtSessionService.removeAllTokensById(id);
 		return new ResponseEntity<>(tokenStatus,HttpStatus.OK);
 	}
 

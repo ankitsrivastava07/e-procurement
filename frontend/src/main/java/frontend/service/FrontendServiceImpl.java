@@ -9,13 +9,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import frontend.controller.ChangePasswordRequestDto;
 import frontend.controller.LoginStatus;
 
 @Service
 public class FrontendServiceImpl implements FrontendService {
 
 	@Autowired
-	FrontendServiceProxy frontendServiceProxy;
+	JwtSessionProxy jwtSessionProxy;
+
+	@Autowired
+	AuthenitcationServiceProxy user;
 
 	@Override
 	public void setCookie(HttpServletRequest request, HttpServletResponse response, LoginStatus status) {
@@ -54,7 +58,7 @@ public class FrontendServiceImpl implements FrontendService {
 		return userName;
 	}
 
-	public String isValidToken(HttpServletRequest request) {
+	public TokenStatus isValidToken(HttpServletRequest request) {
 
 		String token = getToken(request);
 
@@ -62,9 +66,9 @@ public class FrontendServiceImpl implements FrontendService {
 
 		if (Objects.nonNull(token) && !token.isEmpty()) {
 
-			tokenStatus = frontendServiceProxy.isValidToken(token).getBody();
+			tokenStatus = jwtSessionProxy.isValidToken(token).getBody();
 
-			return tokenStatus.isStatus() ? tokenStatus.getFirstName() : "";
+			return tokenStatus;
 		}
 
 		return null;
@@ -78,8 +82,16 @@ public class FrontendServiceImpl implements FrontendService {
 
 		if (Objects.nonNull(token) && !token.isEmpty())
 
-			tokenStatus = frontendServiceProxy.invalidateToken(token).getBody();
+			tokenStatus = jwtSessionProxy.invalidateToken(token).getBody();
 
+	}
+
+	@Override
+	public ChangePasswordResponseStatus changePassword(ChangePasswordRequestDto changePasswordRequest) {
+		ChangePasswordResponseStatus changePasswordResponseStatus = user.changePassword(changePasswordRequest)
+				.getBody();
+
+		return changePasswordResponseStatus;
 	}
 
 }

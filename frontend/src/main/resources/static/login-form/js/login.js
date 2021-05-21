@@ -89,6 +89,10 @@ function login(formData) {
 				setTimeout(function() {
 					$(".modal-body").prepend(("<div class='alert alert-danger' role='alert'>" + response.responseText + "</div>"));
 				}, 500);
+
+				if (response.responseText == "Success")
+					window.location.href = "/"
+
 			},
 			error: function(error) {
 				alert("Something went wrong  please try again later")
@@ -98,11 +102,73 @@ function login(formData) {
 	return false;
 }
 
-$(document).ready(function() {
-	$(window).keydown(function(event) {
-		if (event.which == 13) {
-			event.preventDefault();
-			return false;
+function changePassword(formData) {
+
+	if ($("#change-password").valid()) {
+
+		$.ajax({
+
+			type: "POST",
+			url: "/change-password",
+			contentType: "application/json",
+			data: JSON.stringify(formData),
+			cache: false,
+			beforeSend: function(xhr) {
+				var cookie = $.cookie("session_Token")
+				xhr.setRequestHeader('session_Token', cookie);
+			},
+			success: function(response) {
+			},
+			complete: function(response) {
+
+				if (response.statusText == "success")
+					window.location.href = "/"
+
+			},
+			error: function(error) {
+				alert("Something went wrong  please try again later")
+			}
+		})
+	}
+	return false;
+}
+
+jQuery('#change-password').validate({
+
+	rules: {
+		password: {
+			minlength: 5,
+			required:true
+		},
+		password_confirm: {
+			minlength: 5,
+			required:true,
+			equalTo: "#password"
+		},
+	},
+
+	messages: {
+
+		password: {
+		required:"Please enter password",
+			minlength: "Password should be atleast 5 characters long",
+		},
+
+		password_confirm: {
+		    minlength: "Confirm password should be atleast 5 characters long",
+			equalTo: "Password not matched",
+			required:"Please Enter confirm password"
 		}
-	});
-});
+	},
+
+	submitHandler: function(form) {
+
+		var formData = {
+
+			"password": $("#password").val(),
+		}
+		changePassword(formData)
+	}
+
+})
+

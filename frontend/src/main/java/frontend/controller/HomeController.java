@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,8 +18,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import frontend.service.AuthenitcationServiceProxy;
+import frontend.service.ChangePasswordResponseStatus;
 import frontend.service.FrontendService;
 import frontend.service.HomeControllerProxy;
+import frontend.service.TokenStatus;
 
 @Controller
 @RequestMapping("/")
@@ -36,15 +40,14 @@ public class HomeController {
 
 		ModelAndView model = new ModelAndView();
 		model.setViewName("index");
+		TokenStatus tokenStatus = frontendService.isValidToken(request);
 
-		String username = frontendService.isValidToken(request);
-
-		model.addObject("userName", username);
+		model.addObject("userName", tokenStatus.getFirstName());
 
 		return model;
 	}
 
-	@RequestMapping(value = "/login", method = { RequestMethod.POST})
+	@RequestMapping(value = "/login", method = { RequestMethod.POST })
 	public ResponseEntity<?> login(@RequestBody UserCredential userCredential, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 
@@ -58,7 +61,7 @@ public class HomeController {
 			model.addObject("userName", loginStatus.getFirstName());
 		}
 
-		return new ResponseEntity<>(loginStatus.getMessage(),HttpStatus.OK);
+		return new ResponseEntity<>(loginStatus.getMessage(), HttpStatus.OK);
 
 	}
 
@@ -79,12 +82,37 @@ public class HomeController {
 		mv.setViewName("index");
 		return mv;
 	}
-	
+
 	@GetMapping("/login")
 	public ModelAndView login() {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("login");
 		return mv;
 	}
-	
+
+	@GetMapping("/change-password")
+	public ModelAndView changePasswod(HttpServletRequest request) {
+
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("change-password");
+
+		TokenStatus tokenStatus = frontendService.isValidToken(request);
+
+		if (tokenStatus != null && !tokenStatus.isStatus())
+			return new ModelAndView("redirect:" + "/");
+
+		return mv;
+	}
+
+	@PostMapping("/change-password")
+	public ResponseEntity<?> changePassword(@RequestHeader(value = "session_Token") String token,
+			@RequestBody ChangePasswordRequestDto changePasswordRequest, HttpServletRequest request) {
+
+		changePasswordRequest.setToken(token);
+		
+		ChangePasswordResponseStatus status = frontendService.changePassword(changePasswordRequest);
+
+		return new ResponseEntity<>(status.getMessage(),HttpStatus.OK);
+	}
+
 }

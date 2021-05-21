@@ -199,6 +199,7 @@ border: #4a90e2;
            <li class="drop-down"><a href="">${userName}</a>
             <ul>
               <li><a href="/logout">Sign Out</a></li>
+              <li><a href="/change-password">Change Password</a></li>
               </li>
           
          <#else>
