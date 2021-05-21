@@ -2,12 +2,15 @@
 package user.service;
 
 import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import user.configure.JwtTokenUtil;
-import user.constant.TokenStatusConstant;
+import user.constant.ResponseStatus;
+import user.controller.ChangePasswordRequestDto;
+import user.controller.ChangePasswordResponseStatus;
 import user.controller.LoginStatus;
-import user.controller.TokenUtil;
 import user.dao.UserDao;
 import user.dao.entity.LoginEntity;
 import user.exceptionHandle.InvalidCredentialException;
@@ -20,10 +23,10 @@ public class UserServiceImpl implements UserService {
 	private UserDao userDao;
 
 	@Autowired
-	JwtTokenUtil jwtTokenUtil;
+	private ChangePasswordResponseStatus changePasswordResponseStatus;
 
 	@Autowired
-	TokenUtil tokenUtil;
+	JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
 	private UserServiceProxy userServiceProxy;
@@ -47,17 +50,14 @@ public class UserServiceImpl implements UserService {
 
 		String token = jwtTokenUtil.generateToken(entity.getUserName(), entity.getUserId());
 
-		tokenUtil.setToken(token);
-		tokenUtil.setUserId(entity.getUserId());
+		userServiceProxy.saveToken(jwtTokenUtil.generateToken(entity.getUserName(), entity.getUserId()));
 
-		userServiceProxy.saveToken(tokenUtil);
-
-		String firstName = getFirstName(entity.getUserId());
+		String firstName = getFirstName(token);
 
 		LoginStatus loginStatus = new LoginStatus();
 
-		loginStatus.setStatus(TokenStatusConstant.TRUE);
-		loginStatus.setMessage(TokenStatusConstant.MESSAGE);
+		loginStatus.setStatus(ResponseStatus.TRUE);
+		loginStatus.setMessage(ResponseStatus.MESSAGE);
 
 		loginStatus.setToken(token);
 		loginStatus.setFirstName(firstName);
@@ -71,8 +71,27 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String getFirstName(Long id) {
+	public String getFirstName(String token) {
+		Long id = jwtTokenUtil.getUserId(token);
 		return userDao.getFirstName(id);
+	}
+
+	@Override
+	public ChangePasswordResponseStatus changePassword(ChangePasswordRequestDto dto) {
+
+		if (dto.getToken()==null)
+			throw new InvalidTokenException("Invalid Token or token does not exist");
+		
+		Long id = jwtTokenUtil.getUserId(dto.getToken());
+		userDao.changePassword(dto, id);
+
+		changePasswordResponseStatus.setMessage(ResponseStatus.MESSAGE);
+		changePasswordResponseStatus.setStatus(ResponseStatus.TRUE);
+
+		userServiceProxy.invalidateTokens(dto.getToken());
+
+		return changePasswordResponseStatus;
+
 	}
 
 }

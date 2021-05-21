@@ -3,23 +3,14 @@ package jwtsession.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jwtsession.constant.TokenStatusConstant;
-import jwtsession.controller.JwtSessionDto;
 import jwtsession.controller.TokenStatus;
 import jwtsession.dao.JwtSessionDao;
 import jwtsession.dao.entity.JwtSessionEntity;
 import jwtsession.exceptionHandle.InvalidTokenException;
-import jwtsession.jwtutil.JwtSessionServiceProxy;
 import jwtsession.jwtutil.JwtTokenUtil;
-import jwtsession.translator.ObjectTranslator;
 
 @Service
 public class JwtSessionServiceImpl implements JwtSessionService {
-
-	@Autowired
-	private ObjectTranslator objectTranslator;
-
-	@Autowired
-	JwtSessionServiceProxy jwtSessionServiceProxy;
 
 	@Autowired
 	private JwtSessionDao jwtSessionDao;
@@ -28,14 +19,16 @@ public class JwtSessionServiceImpl implements JwtSessionService {
 	TokenStatus tokenStatus;
 
 	@Autowired
+	UserServiceProxy userServiceProxy;
+
+	
+	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
 	@Override
 	public TokenStatus isValidToken(String token) {
 
 		jwtTokenUtil.validateToken(token);
-
-		Long userId = jwtTokenUtil.getUserId(token);
 
 		Boolean status = jwtSessionDao.isValidToken(token);
 
@@ -45,21 +38,21 @@ public class JwtSessionServiceImpl implements JwtSessionService {
 		tokenStatus.setStatus(TokenStatusConstant.TRUE);
 		tokenStatus.setMessage(TokenStatusConstant.MESSAGE);
 		tokenStatus.setToken(token);
-
-		String firstName = jwtSessionServiceProxy.getFirstName(userId);
-
+		String firstName= userServiceProxy.getFirstName(token).getBody();
 		tokenStatus.setFirstName(firstName);
-
+		
 		return tokenStatus;
 	}
 
 	@Override
-	public TokenStatus saveToken(JwtSessionDto tokenDto) {
+	public TokenStatus saveToken(String token) {
+
+		Long id = jwtTokenUtil.getUserId(token);
 
 		JwtSessionEntity entity = new JwtSessionEntity();
 
-		entity.setUserId(tokenDto.getUserId());
-		entity.setToken(tokenDto.getToken());
+		entity.setUserId(id);
+		entity.setToken(token);
 
 		jwtSessionDao.saveToken(entity);
 
@@ -81,7 +74,13 @@ public class JwtSessionServiceImpl implements JwtSessionService {
 			tokenStatus.setToken(jwtEntity.getToken());
 			tokenStatus.setCreatedAt(jwtEntity.getCreatedAt());
 		}
-		
+
+		return tokenStatus;
+	}
+
+	@Override
+	public TokenStatus removeAllTokensById(Long user_id) {
+		TokenStatus tokenStatus = jwtSessionDao.removeAllTokensById(user_id);
 		return tokenStatus;
 	}
 }

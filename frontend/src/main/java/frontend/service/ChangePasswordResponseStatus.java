@@ -1,15 +1,13 @@
-package user.controller;
+package frontend.service;
 
 import lombok.Data;
 
 @Data
-public class TokenStatus {
+public class ChangePasswordResponseStatus {
 
 	private boolean status;
 
 	private String message;
 
 	private String token;
-
-	private Long userId;
 }

@@ -6,9 +6,11 @@ import lombok.Data;
 
 @Data
 @Component
-public class TokenUtil {
+public class ChangePasswordResponseStatus {
+
+	private boolean status;
+
+	private String message;
 
 	private String token;
-	private Long userId;
-
 }

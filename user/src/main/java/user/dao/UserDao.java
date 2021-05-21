@@ -1,5 +1,6 @@
 package user.dao;
 
+import user.controller.ChangePasswordRequestDto;
 import user.dao.entity.LoginEntity;
 
 public interface UserDao {
@@ -11,4 +12,7 @@ public interface UserDao {
 	String findByUserName(String username);
 
 	String getFirstName(Long id);
+
+	void changePassword(ChangePasswordRequestDto dto,Long id);
+
 }

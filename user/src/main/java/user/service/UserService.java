@@ -1,5 +1,7 @@
 package user.service;
 
+import user.controller.ChangePasswordRequestDto;
+import user.controller.ChangePasswordResponseStatus;
 import user.controller.LoginStatus;
 
 public interface UserService {
@@ -10,6 +12,8 @@ public interface UserService {
 
 	String findByUserName(String username);
 
-	String getFirstName(Long userId);
+	String getFirstName(String token);
+
+	ChangePasswordResponseStatus changePassword(ChangePasswordRequestDto dto);
 
 }

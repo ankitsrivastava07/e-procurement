@@ -1,37 +1,41 @@
 package user.dao;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import user.controller.ChangePasswordRequestDto;
 import user.dao.entity.LoginEntity;
 import user.dao.entity.UserDetailEntity;
 import user.dao.repository.LoginRepository;
 import user.dao.repository.UserDetailRepository;
+import user.exceptionHandle.UserNotFoundException;
 
 @Repository
 public class UserDaoImpl implements UserDao {
 
 	@Autowired
-	private LoginRepository userRepository;
+	private LoginRepository loginRepository;
 
 	@Autowired
 	UserDetailRepository userDetailRepository;
 
 	@Override
 	public LoginEntity findByUserNameAndPassword(String username, String password) {
-		return userRepository.findByUserNameAndPassword(username.toLowerCase(), password);
+		
+		return loginRepository.findByUserNameAndPassword(username.toLowerCase(), password);
 	}
 
 	@Override
 	public Boolean isUserBlocked(String username) {
-		return userRepository.isUserBlocked(username.toLowerCase());
+		return loginRepository.isUserBlocked(username.toLowerCase());
 	}
 
 	@Override
 	public String findByUserName(String username) {
-		return userRepository.findByUserName(username).getUserName();
+		return loginRepository.findByUserName(username).getUserName();
 
 	}
 
@@ -45,6 +49,26 @@ public class UserDaoImpl implements UserDao {
 			return user.getFirstName();
 		}
 		return null;
+	}
+
+	@Override
+	public void changePassword(ChangePasswordRequestDto dto, Long id) {
+
+		Optional<LoginEntity> entity = loginRepository.findById(id);
+
+		if (entity.isEmpty())
+			throw new UserNotFoundException("User not found Exception");
+
+		LoginEntity loginEntity = entity.get();
+
+		loginEntity.setOldPassword(loginEntity.getNewPassword());
+
+		loginEntity.setCreatedAt(LocalDateTime.now());
+
+		loginEntity.setNewPassword(dto.getPassword());
+
+		loginRepository.save(loginEntity);
+
 	}
 
 }

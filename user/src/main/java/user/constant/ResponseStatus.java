@@ -1,6 +1,6 @@
 package user.constant;
 
-public class TokenStatusConstant {
+public class ResponseStatus {
 
 	public static final Boolean TRUE = true;
 	public static final Boolean FALSE = true;
