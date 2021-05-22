@@ -1,6 +1,7 @@
 
 package user.service;
 
+import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,16 +80,21 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ChangePasswordResponseStatus changePassword(ChangePasswordRequestDto dto) {
 
-		if (dto.getToken()==null)
+		Map<String, String> map = dto.getToken();
+
+		if (map == null || map.isEmpty())
 			throw new InvalidTokenException("Invalid Token or token does not exist");
-		
-		Long id = jwtTokenUtil.getUserId(dto.getToken());
-		userDao.changePassword(dto, id);
+
+		Long id = jwtTokenUtil.getUserId(map.get("token"));
+
+		String password = map.get("password");
+
+		userDao.changePassword(password, id);
 
 		changePasswordResponseStatus.setMessage(ResponseStatus.MESSAGE);
 		changePasswordResponseStatus.setStatus(ResponseStatus.TRUE);
 
-		userServiceProxy.invalidateTokens(dto.getToken());
+		userServiceProxy.invalidateTokens(dto);
 
 		return changePasswordResponseStatus;
 

@@ -1,5 +1,6 @@
 package jwtsession.service;
 
+import java.util.Map;
 import jwtsession.controller.TokenStatus;
 
 public interface JwtSessionService {
@@ -10,5 +11,5 @@ public interface JwtSessionService {
 
 	TokenStatus removeToken(String token);
 
-	TokenStatus removeAllTokensById(Long user_id);
+	TokenStatus removeAllTokens(Map<String, String> map);
 }

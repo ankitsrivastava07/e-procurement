@@ -40,9 +40,11 @@ public class HomeController {
 
 		ModelAndView model = new ModelAndView();
 		model.setViewName("index");
+
 		TokenStatus tokenStatus = frontendService.isValidToken(request);
 
-		model.addObject("userName", tokenStatus.getFirstName());
+		if (tokenStatus != null)
+			model.addObject("userName", tokenStatus.getFirstName());
 
 		return model;
 	}
@@ -65,11 +67,11 @@ public class HomeController {
 
 	}
 
-	@GetMapping("/logout")
+	@GetMapping("/signout")
 	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response)
 			throws JsonProcessingException {
 
-		System.out.println("Log out");
+		System.out.println("sign out");
 
 		frontendService.invalidateToken(request);
 
@@ -84,8 +86,14 @@ public class HomeController {
 	}
 
 	@GetMapping("/login")
-	public ModelAndView login() {
+	public ModelAndView login(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView();
+
+		TokenStatus tokenStatus = frontendService.isValidToken(request);
+
+		if (tokenStatus != null && tokenStatus.isStatus())
+			return new ModelAndView("redirect:" + "/");
+
 		mv.setViewName("login");
 		return mv;
 	}
@@ -98,21 +106,32 @@ public class HomeController {
 
 		TokenStatus tokenStatus = frontendService.isValidToken(request);
 
-		if (tokenStatus != null && !tokenStatus.isStatus())
-			return new ModelAndView("redirect:" + "/");
+		if (tokenStatus == null || tokenStatus != null && !tokenStatus.isStatus())
+			return new ModelAndView("redirect:/" + "login");
 
 		return mv;
 	}
 
 	@PostMapping("/change-password")
 	public ResponseEntity<?> changePassword(@RequestHeader(value = "session_Token") String token,
-			@RequestBody ChangePasswordRequestDto changePasswordRequest, HttpServletRequest request) {
+			@RequestBody ChangePasswordReqest req, HttpServletRequest request) {
 
-		changePasswordRequest.setToken(token);
-		
-		ChangePasswordResponseStatus status = frontendService.changePassword(changePasswordRequest);
+		ChangePasswordResponseStatus status = frontendService.changePassword(req.getPassword(), token);
 
-		return new ResponseEntity<>(status.getMessage(),HttpStatus.OK);
+		return new ResponseEntity<>(status.getMessage(), HttpStatus.OK);
+	}
+
+	@GetMapping("/signout-from-alldevices")
+	public ModelAndView signOutFromAllDevices(HttpServletRequest request) {
+
+		TokenStatus tokenStatus = frontendService.isValidToken(request);
+
+		if (tokenStatus == null || tokenStatus != null && !tokenStatus.isStatus())
+			return new ModelAndView("redirect:/" + "login");
+
+		frontendService.removeAllTokens(request);
+
+		return new ModelAndView("redirect:" + "/");
 	}
 
 }

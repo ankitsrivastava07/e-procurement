@@ -1,11 +1,17 @@
 package jwtsession.service;
 
+import java.time.LocalDateTime;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import jwtsession.constant.TokenStatusConstant;
 import jwtsession.controller.TokenStatus;
 import jwtsession.dao.JwtSessionDao;
 import jwtsession.dao.entity.JwtSessionEntity;
+import jwtsession.dao.repository.JwtSessionRepository;
 import jwtsession.exceptionHandle.InvalidTokenException;
 import jwtsession.jwtutil.JwtTokenUtil;
 
@@ -19,9 +25,11 @@ public class JwtSessionServiceImpl implements JwtSessionService {
 	TokenStatus tokenStatus;
 
 	@Autowired
+	JwtSessionRepository repository;
+
+	@Autowired
 	UserServiceProxy userServiceProxy;
 
-	
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
@@ -38,9 +46,9 @@ public class JwtSessionServiceImpl implements JwtSessionService {
 		tokenStatus.setStatus(TokenStatusConstant.TRUE);
 		tokenStatus.setMessage(TokenStatusConstant.MESSAGE);
 		tokenStatus.setToken(token);
-		String firstName= userServiceProxy.getFirstName(token).getBody();
+		String firstName = userServiceProxy.getFirstName(token).getBody();
 		tokenStatus.setFirstName(firstName);
-		
+
 		return tokenStatus;
 	}
 
@@ -78,9 +86,26 @@ public class JwtSessionServiceImpl implements JwtSessionService {
 		return tokenStatus;
 	}
 
+	@Transactional
 	@Override
-	public TokenStatus removeAllTokensById(Long user_id) {
-		TokenStatus tokenStatus = jwtSessionDao.removeAllTokensById(user_id);
+	public TokenStatus removeAllTokens(Map<String, String> map) {
+
+		Long user_id = null;
+
+		if (map != null && !map.isEmpty() && map.get("request").equals("change-password")) {
+			String token = map.get("token");
+			user_id = jwtTokenUtil.getUserId(token);
+			repository.removeAllTokensNot(token, user_id);
+		}
+
+		else if (!map.isEmpty()) {
+			user_id = jwtTokenUtil.getUserId(map.get("token"));
+			 repository.removeAllTokensById(user_id);
+		}
+		tokenStatus.setStatus(TokenStatusConstant.TRUE);
+		tokenStatus.setCreatedAt(LocalDateTime.now());
+		tokenStatus.setMessage(TokenStatusConstant.MESSAGE);
+
 		return tokenStatus;
 	}
 }

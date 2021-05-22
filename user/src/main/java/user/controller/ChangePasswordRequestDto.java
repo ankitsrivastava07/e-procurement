@@ -1,11 +1,11 @@
 package user.controller;
 
+import java.util.Map;
+
 import lombok.Data;
 
 @Data
 public class ChangePasswordRequestDto {
 
-	private String password;
-	private String token;
-	
+	private Map<String, String> token;
 }

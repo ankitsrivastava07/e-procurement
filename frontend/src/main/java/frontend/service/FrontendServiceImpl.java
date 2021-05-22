@@ -1,5 +1,7 @@
 package frontend.service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.servlet.http.Cookie;
@@ -71,7 +73,7 @@ public class FrontendServiceImpl implements FrontendService {
 			return tokenStatus;
 		}
 
-		return null;
+		return tokenStatus;
 	}
 
 	public void invalidateToken(HttpServletRequest request) {
@@ -87,11 +89,41 @@ public class FrontendServiceImpl implements FrontendService {
 	}
 
 	@Override
-	public ChangePasswordResponseStatus changePassword(ChangePasswordRequestDto changePasswordRequest) {
-		ChangePasswordResponseStatus changePasswordResponseStatus = user.changePassword(changePasswordRequest)
-				.getBody();
+	public ChangePasswordResponseStatus changePassword(String password, String token) {
+
+		ChangePasswordRequestDto dto = new ChangePasswordRequestDto();
+
+		Map<String, String> map = new HashMap<>();
+
+		map.put("password", password);
+
+		map.put("token", token);
+
+		map.put("request", "change-password");
+
+		dto.setToken(map);
+
+		ChangePasswordResponseStatus changePasswordResponseStatus = user.changePassword(dto).getBody();
 
 		return changePasswordResponseStatus;
+	}
+
+	@Override
+	public TokenStatus removeAllTokens(HttpServletRequest request) {
+
+		ChangePasswordRequestDto dto = new ChangePasswordRequestDto();
+
+		String token = getToken(request);
+
+		Map<String, String> map = new HashMap<>();
+		map.put("token", token);
+        map.put("request", "singout-from-alldevices");
+		
+		dto.setToken(map);
+
+		TokenStatus tokenStatus = jwtSessionProxy.invalidateTokens(dto).getBody();
+
+		return tokenStatus;
 	}
 
 }

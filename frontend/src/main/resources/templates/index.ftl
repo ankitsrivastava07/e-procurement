@@ -4,6 +4,8 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta http-equiv="cache-control" content="no-cache"/>
+<meta http-equiv="Pragma" content="no-cache">
 
   <title>BizLand Bootstrap Template - Index</title>
   <meta content="" name="description">
@@ -198,8 +200,8 @@ border: #4a90e2;
           <#if userName?has_content>
            <li class="drop-down"><a href="">${userName}</a>
             <ul>
-              <li><a href="/logout">Sign Out</a></li>
-              <li><a href="/change-password">Change Password</a></li>
+              <li><a href="/signout">Sign Out</a></li>
+              <li><a href="/signout-from-alldevices">Sign out from all device</a></li>
               </li>
           
          <#else>

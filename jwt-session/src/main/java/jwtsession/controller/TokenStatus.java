@@ -15,6 +15,6 @@ public class TokenStatus {
 	private String token;
 
 	private LocalDateTime createdAt;
-	
+
 	private String firstName;
 }

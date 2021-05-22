@@ -75,7 +75,7 @@ background-color: #fdf6f6;
 			<div class="modal-body" id="modal1-body">
 		      		<div class="form-group">
 		      		<label for="recipient-name" class="col-form-label">Enter Password </label>
-		      			<input type="text" class="form-control rounded-left" maxlength="30" name="password" id="password" autocomplete=off Placeholder="Enter password">
+		      			<input type="password" class="form-control rounded-left" maxlength="30" name="password" id="password" autocomplete=off Placeholder="Enter password">
 		      		</div>
 	            <div class="form-group">
 	            <label for="recipient-name" class="col-form-label">Confirm Password</label>

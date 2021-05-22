@@ -1,10 +1,11 @@
 package jwtsession.controller;
 
+import java.util.Map;
+
 import lombok.Data;
 
 @Data
 public class JwtSessionDto {
 
-	private String token;
-	private Long userId;
+	private Map<String, String> token;
 }

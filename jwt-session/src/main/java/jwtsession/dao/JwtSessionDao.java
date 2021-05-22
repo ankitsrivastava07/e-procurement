@@ -1,6 +1,5 @@
 package jwtsession.dao;
 
-import jwtsession.controller.TokenStatus;
 import jwtsession.dao.entity.JwtSessionEntity;
 
 public interface JwtSessionDao {
@@ -11,5 +10,4 @@ public interface JwtSessionDao {
 	
 	JwtSessionEntity removeToken(String token);
 	
-	TokenStatus removeAllTokensById(Long user_id);
 }

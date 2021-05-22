@@ -12,5 +12,10 @@ public interface JwtSessionRepository extends JpaRepository<JwtSessionEntity, Lo
 	JwtSessionEntity findBytoken(String token);
 
 	@Modifying
-	Long deleteByUserId(Long userId);
+	@Query(value = "delete from token_session where not token = ?1 and user_id = ?2 ", nativeQuery = true)
+	void removeAllTokensNot(String token, Long user_id);
+	
+	@Modifying
+	@Query(value = "delete from token_session where user_id = ?1", nativeQuery = true)
+	void removeAllTokensById(Long userId);
 }

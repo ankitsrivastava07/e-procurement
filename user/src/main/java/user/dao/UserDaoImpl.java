@@ -2,11 +2,8 @@ package user.dao;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import user.controller.ChangePasswordRequestDto;
 import user.dao.entity.LoginEntity;
 import user.dao.entity.UserDetailEntity;
 import user.dao.repository.LoginRepository;
@@ -24,7 +21,7 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public LoginEntity findByUserNameAndPassword(String username, String password) {
-		
+
 		return loginRepository.findByUserNameAndPassword(username.toLowerCase(), password);
 	}
 
@@ -52,7 +49,7 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public void changePassword(ChangePasswordRequestDto dto, Long id) {
+	public void changePassword(String password, Long id) {
 
 		Optional<LoginEntity> entity = loginRepository.findById(id);
 
@@ -65,7 +62,7 @@ public class UserDaoImpl implements UserDao {
 
 		loginEntity.setCreatedAt(LocalDateTime.now());
 
-		loginEntity.setNewPassword(dto.getPassword());
+		loginEntity.setNewPassword(password);
 
 		loginRepository.save(loginEntity);
 

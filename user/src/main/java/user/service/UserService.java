@@ -14,6 +14,6 @@ public interface UserService {
 
 	String getFirstName(String token);
 
-	ChangePasswordResponseStatus changePassword(ChangePasswordRequestDto dto);
+	ChangePasswordResponseStatus changePassword(ChangePasswordRequestDto changePasswordRequest);
 
 }
