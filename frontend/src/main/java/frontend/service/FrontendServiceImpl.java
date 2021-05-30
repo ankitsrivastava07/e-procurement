@@ -3,14 +3,11 @@ package frontend.service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import frontend.controller.ChangePasswordRequestDto;
 import frontend.controller.LoginStatus;
 
@@ -18,10 +15,7 @@ import frontend.controller.LoginStatus;
 public class FrontendServiceImpl implements FrontendService {
 
 	@Autowired
-	JwtSessionProxy jwtSessionProxy;
-
-	@Autowired
-	AuthenitcationServiceProxy user;
+	private ApiGatewayRequestUri apiGatewayRequestUri;
 
 	@Override
 	public void setCookie(HttpServletRequest request, HttpServletResponse response, LoginStatus status) {
@@ -68,7 +62,7 @@ public class FrontendServiceImpl implements FrontendService {
 
 		if (Objects.nonNull(token) && !token.isEmpty()) {
 
-			tokenStatus = jwtSessionProxy.isValidToken(token).getBody();
+			tokenStatus = apiGatewayRequestUri.isValidToken(token).getBody();
 
 			return tokenStatus;
 		}
@@ -84,7 +78,7 @@ public class FrontendServiceImpl implements FrontendService {
 
 		if (Objects.nonNull(token) && !token.isEmpty())
 
-			tokenStatus = jwtSessionProxy.invalidateToken(token).getBody();
+			tokenStatus = apiGatewayRequestUri.invalidateToken(token).getBody();
 
 	}
 
@@ -103,7 +97,7 @@ public class FrontendServiceImpl implements FrontendService {
 
 		dto.setToken(map);
 
-		ChangePasswordResponseStatus changePasswordResponseStatus = user.changePassword(dto).getBody();
+		ChangePasswordResponseStatus changePasswordResponseStatus = apiGatewayRequestUri.changePassword(dto).getBody();
 
 		return changePasswordResponseStatus;
 	}
@@ -117,11 +111,11 @@ public class FrontendServiceImpl implements FrontendService {
 
 		Map<String, String> map = new HashMap<>();
 		map.put("token", token);
-        map.put("request", "singout-from-alldevices");
-		
+		map.put("request", "singout-from-alldevices");
+
 		dto.setToken(map);
 
-		TokenStatus tokenStatus = jwtSessionProxy.invalidateTokens(dto).getBody();
+		TokenStatus tokenStatus = apiGatewayRequestUri.invalidateTokens(dto).getBody();
 
 		return tokenStatus;
 	}

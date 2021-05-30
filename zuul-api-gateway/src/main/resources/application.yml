@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: api-gateway
+    
+server:
+  port: 8765
+
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          netflix: trace
+
+
+zuul:
+  debugFilters: true
+  include-debug-header: true
+  sensitiveHeaders:
+  routes:
+    login:
+        path: /users/*
+        url: http://localhost:8081
+        stripPrefix: false
+        sensitiveHeaders:    
+    jwt-session:
+      path: /token-session/*
+      url:  http://localhost:8082  
+      stripPrefix: false
+      sensitiveHeaders:

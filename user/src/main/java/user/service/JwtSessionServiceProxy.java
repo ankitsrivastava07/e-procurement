@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import user.controller.ChangePasswordRequestDto;
 
 @FeignClient(name = "jwt-session", url = "localhost:8082")
-public interface UserServiceProxy {
+public interface JwtSessionServiceProxy {
 
 	@PostMapping(value = "/token-session/save-token")
 	ResponseEntity<String> saveToken(@RequestBody String token);

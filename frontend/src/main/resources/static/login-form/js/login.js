@@ -130,7 +130,7 @@ function changePassword(formData) {
 			}
 		})
 	}
-	return false;
+
 }
 
 jQuery('#change-password').validate({
@@ -138,11 +138,11 @@ jQuery('#change-password').validate({
 	rules: {
 		password: {
 			minlength: 5,
-			required:true
+			required: true
 		},
 		password_confirm: {
 			minlength: 5,
-			required:true,
+			required: true,
 			equalTo: "#password"
 		},
 	},
@@ -150,14 +150,14 @@ jQuery('#change-password').validate({
 	messages: {
 
 		password: {
-		required:"Please enter password",
+			required: "Please enter password",
 			minlength: "Password should be atleast 5 characters long",
 		},
 
 		password_confirm: {
-		    minlength: "Confirm password should be atleast 5 characters long",
+			minlength: "Confirm password should be atleast 5 characters long",
 			equalTo: "Password not matched",
-			required:"Please Enter confirm password"
+			required: "Please Enter confirm password"
 		}
 	},
 
@@ -172,12 +172,20 @@ jQuery('#change-password').validate({
 
 })
 
-window.addEventListener( "pageshow", function ( event ) {
-  var historyTraversal = event.persisted || 
-                         ( typeof window.performance != "undefined" && 
-                              window.performance.navigation.type === 2 );
-  if ( historyTraversal ) {
-    // Handle page restore.
-    window.location.reload();
-  }
+window.addEventListener("pageshow", function(event) {
+	var historyTraversal = event.persisted ||
+		(typeof window.performance != "undefined" &&
+			window.performance.navigation.type === 2);
+	if (historyTraversal) {
+		// Handle page restore.
+		window.location.reload();
+	}
 });
+
+/*$('#login-form').on('keyup keypress', function(e) {
+	var keyCode = e.keyCode || e.which;
+	if (keyCode === 13) {
+		return false;
+	}
+});
+*/

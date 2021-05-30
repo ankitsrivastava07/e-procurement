@@ -9,16 +9,26 @@ import frontend.controller.ChangePasswordRequestDto;
 import frontend.controller.LoginStatus;
 import frontend.controller.UserCredential;
 
-@FeignClient(name = "users", url = "localhost:8081")
-public interface AuthenitcationServiceProxy {
+@FeignClient(name = "api-gateway", url = "localhost:8765")
+public interface ApiGatewayRequestUri {
 
 	@PostMapping("/users/login")
 	public ResponseEntity<LoginStatus> createAuthenticationToken(@RequestBody UserCredential userCredential);
 
 	@PostMapping("/users/change-password")
-	public ResponseEntity<ChangePasswordResponseStatus> changePassword(@RequestBody ChangePasswordRequestDto changePasswordRequest);
+	public ResponseEntity<ChangePasswordResponseStatus> changePassword(
+			@RequestBody ChangePasswordRequestDto changePasswordRequest);
 
 	@PostMapping("/users/get-first-name")
 	public ResponseEntity<String> getFirstName(@RequestBody String token);
+
+	@PostMapping("/token-session/validate-token")
+	public ResponseEntity<TokenStatus> isValidToken(@RequestBody String jwt);
+
+	@PostMapping("/token-session/invalidate-token")
+	public ResponseEntity<TokenStatus> invalidateToken(@RequestBody String token);
+
+	@PostMapping("/token-session/invalidate-tokens")
+	public ResponseEntity<TokenStatus> invalidateTokens(@RequestBody ChangePasswordRequestDto dto);
 
 }

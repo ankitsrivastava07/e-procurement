@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@EnableFeignClients("frontend.*")
+@EnableFeignClients
 public class FrontendApplication {
 
 	public static void main(String[] args) {

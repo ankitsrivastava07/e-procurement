@@ -15,7 +15,7 @@ import jwtsession.service.JwtSessionService;
 
 
 @RestController
-@RequestMapping("token-session")
+@RequestMapping("/token-session")
 public class JwtSessionController {
 
 	@Autowired

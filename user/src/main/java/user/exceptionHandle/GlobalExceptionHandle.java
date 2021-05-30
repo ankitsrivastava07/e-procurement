@@ -1,18 +1,15 @@
 package user.exceptionHandle;
 
+import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandle {
-
-	@Autowired
-	private HttpServletRequest path;
 
 	@ExceptionHandler(UserNameOrEmailNotFoundException.class)
 	public ResponseEntity<?> userNameNotFound(UserNameOrEmailNotFoundException exception) {
@@ -37,7 +34,6 @@ public class GlobalExceptionHandle {
 		loginStatus.setMessage(exception.getMessage());
 
 		return new ResponseEntity<>(loginStatus, HttpStatus.OK);
-		// "Invalid uername or password";
 
 	}
 
@@ -51,4 +47,11 @@ public class GlobalExceptionHandle {
 		return new ResponseEntity<>(loginStatus, HttpStatus.OK);
 	}
 
+	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+	public ResponseEntity<?> httpMethodNotSupported(HttpRequestMethodNotSupportedException ex,HttpServletRequest request) {
+		ApiError apiError = new ApiError(new Date(), HttpStatus.METHOD_NOT_ALLOWED.value(),
+				HttpStatus.METHOD_NOT_ALLOWED.name(), ex.getMessage(), request.getRequestURL().toString(),ex.getSupportedMethods());
+
+		return new ResponseEntity<>(apiError, HttpStatus.METHOD_NOT_ALLOWED);
+	}
 }

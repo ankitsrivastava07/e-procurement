@@ -30,12 +30,12 @@ public class UserServiceImpl implements UserService {
 	JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
-	private UserServiceProxy userServiceProxy;
+	private JwtSessionServiceProxy jwtSessionServiceProxy;
 
 	public void isUserBlocked(String username) {
-		Boolean isBlocked = userDao.isUserBlocked(username);
+		Boolean isBlockend = userDao.isUserBlocked(username);
 
-		if (Objects.nonNull(isBlocked) && isBlocked != false)
+		if (Objects.nonNull(isBlockend) && isBlockend)
 			throw new UserBlockedException("Your account has been blocked for 24 hours");
 	}
 
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
 		String token = jwtTokenUtil.generateToken(entity.getUserName(), entity.getUserId());
 
-		userServiceProxy.saveToken(jwtTokenUtil.generateToken(entity.getUserName(), entity.getUserId()));
+		jwtSessionServiceProxy.saveToken(jwtTokenUtil.generateToken(entity.getUserName(), entity.getUserId()));
 
 		String firstName = getFirstName(token);
 
@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
 		changePasswordResponseStatus.setMessage(ResponseStatus.MESSAGE);
 		changePasswordResponseStatus.setStatus(ResponseStatus.TRUE);
 
-		userServiceProxy.invalidateTokens(dto);
+		jwtSessionServiceProxy.invalidateTokens(dto);
 
 		return changePasswordResponseStatus;
 

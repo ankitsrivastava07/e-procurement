@@ -3,6 +3,7 @@ package user.controller;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +15,7 @@ import user.configure.JwtTokenUtil;
 import user.service.UserService;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("/users")
 public class UserController {
 
 	@Autowired
@@ -41,9 +42,9 @@ public class UserController {
 	@PostMapping("/change-password")
 	public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDto changePasswordRequest) {
 
-		ChangePasswordResponseStatus changePasswordResponseStatus =userService.changePassword(changePasswordRequest);
+		ChangePasswordResponseStatus changePasswordResponseStatus = userService.changePassword(changePasswordRequest);
 
-		return new ResponseEntity<>(changePasswordResponseStatus,HttpStatus.OK);
+		return new ResponseEntity<>(changePasswordResponseStatus, HttpStatus.OK);
 	}
 
 }

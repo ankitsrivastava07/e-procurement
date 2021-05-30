@@ -5,14 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-	<link href="login-form/css/fonts.css" rel="stylesheet">
-
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="login-form/css/font.css">
 	<link rel="stylesheet" href="login-form/css/style.css">
 <script src="login-form/js/jquery.min.js"></script>
-  <script src="login-form/js/popper.js"></script>
-  <script src="login-form/js/bootstrap.min.js"></script>
-  <script src="login-form/js/main.js"></script>
 <script src="login-form/js/validate.js"></script>
 
 	</head>
@@ -68,7 +63,7 @@ background-color: #fdf6f6;
 				<div class="col-md-7 col-lg-5">
 					<div class="login-wrap p-4 p-md-5">
 		      	<div class="icon d-flex align-items-center justify-content-center">
-		      		<span class="fa fa-user-o"></span>
+		      		<i class="fa fa-user-o text-light" aria-hidden="true"></i>
 		      	</div>
 		      	<h3 class="text-center mb-4">Login</h3>
 			<div class="modal-body" id="modal1-body">
@@ -101,6 +96,7 @@ background-color: #fdf6f6;
 		</div>
 		</div>
 	</section>
+	
 	<script src="login-form/js/login.js"></script>
 	</body>
 </html>

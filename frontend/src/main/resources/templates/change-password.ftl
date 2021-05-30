@@ -7,7 +7,7 @@
 
 	<link href="login-form/css/fonts.css" rel="stylesheet">
 
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="login-form/css/font.css">
 	<link rel="stylesheet" href="login-form/css/style.css">
 <script src="login-form/js/jquery.min.js"></script>
 <script src="login-form/js/cookie.js"></script>
@@ -79,7 +79,7 @@ background-color: #fdf6f6;
 		      		</div>
 	            <div class="form-group">
 	            <label for="recipient-name" class="col-form-label">Confirm Password</label>
-	              <input type="password" class="form-control rounded-left" maxlength="20" name="password_confirm" id="password_confirm" Placeholder="Enter your password">
+	              <input type="password" class="form-control rounded-left" maxlength="20" name="password_confirm" id="password_confirm" Placeholder="Enter confirm password">
 	            </div>
 	            <div class="form-group">
 	            	<button type="submit" class="form-control btn btn-primary rounded submit px-3">Login</button>

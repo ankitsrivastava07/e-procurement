@@ -1,6 +1,7 @@
 package user.exceptionHandle;
 
 import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,12 +14,15 @@ public class ApiError {
 	private String error;
 	private String message;
 	private String path;
+	private String supportedMethod[];
 
-	public ApiError(Date timestamp, Integer status, String error, String message, String path) {
+	public ApiError(Date timestamp, Integer status, String error, String message, String path,
+			String supportedMethod[]) {
 		this.timestamp = timestamp;
 		this.status = status;
 		this.error = error;
 		this.message = message;
 		this.path = path;
+		this.supportedMethod = supportedMethod;
 	}
 }

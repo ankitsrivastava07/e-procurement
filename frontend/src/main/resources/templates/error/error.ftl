@@ -2,10 +2,11 @@
 <html>
     <head>
         <title>Site Under construction</title>
- 
-<link href="/css/bootstrap3.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="/js/bootstrap3.min.js"></script>
-<script src="/js/script.js"></script>
+
+<link href="/assets/css/404-bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="assets/js/404-jquery.min.js"></script>
+<script src="assets/js/404-bootstrap.min.js"></script>
+
     </head>
     <style>
   

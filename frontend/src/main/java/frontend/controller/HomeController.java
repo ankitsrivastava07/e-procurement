@@ -2,7 +2,6 @@ package frontend.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +16,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import frontend.service.AuthenitcationServiceProxy;
+import frontend.service.ApiGatewayRequestUri;
 import frontend.service.ChangePasswordResponseStatus;
 import frontend.service.FrontendService;
-import frontend.service.HomeControllerProxy;
 import frontend.service.TokenStatus;
 
 @Controller
@@ -29,11 +27,9 @@ public class HomeController {
 
 	@Autowired
 	private FrontendService frontendService;
-	@Autowired
-	private HomeControllerProxy homeControllerProxy;
 
 	@Autowired
-	private AuthenitcationServiceProxy proxy;
+	private ApiGatewayRequestUri apiGatewayRequestUri;
 
 	@GetMapping({ "/", "/home" })
 	public ModelAndView home(HttpServletRequest request) {
@@ -42,7 +38,6 @@ public class HomeController {
 		model.setViewName("index");
 
 		TokenStatus tokenStatus = frontendService.isValidToken(request);
-
 		if (tokenStatus != null)
 			model.addObject("userName", tokenStatus.getFirstName());
 
@@ -53,16 +48,13 @@ public class HomeController {
 	public ResponseEntity<?> login(@RequestBody UserCredential userCredential, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 
-		ResponseEntity<LoginStatus> status = proxy.createAuthenticationToken(userCredential);
+		ResponseEntity<LoginStatus> status = apiGatewayRequestUri.createAuthenticationToken(userCredential);
 
 		LoginStatus loginStatus = status.getBody();
 
-		if (loginStatus.isStatus()) {
+		if (loginStatus.isStatus())
 			frontendService.setCookie(request, response, loginStatus);
-			ModelAndView model = new ModelAndView();
-			model.addObject("userName", loginStatus.getFirstName());
-		}
-
+	
 		return new ResponseEntity<>(loginStatus.getMessage(), HttpStatus.OK);
 
 	}
@@ -71,11 +63,9 @@ public class HomeController {
 	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response)
 			throws JsonProcessingException {
 
-		System.out.println("sign out");
-
 		frontendService.invalidateToken(request);
 
-		return new ModelAndView("redirect:" + "/");
+		return new ModelAndView("redirect:" + "/login");
 	}
 
 	@GetMapping("/register")
@@ -91,8 +81,9 @@ public class HomeController {
 
 		TokenStatus tokenStatus = frontendService.isValidToken(request);
 
-		if (tokenStatus != null && tokenStatus.isStatus())
+		if (tokenStatus != null && tokenStatus.isStatus()) {
 			return new ModelAndView("redirect:" + "/");
+		}
 
 		mv.setViewName("login");
 		return mv;
@@ -106,8 +97,11 @@ public class HomeController {
 
 		TokenStatus tokenStatus = frontendService.isValidToken(request);
 
-		if (tokenStatus == null || tokenStatus != null && !tokenStatus.isStatus())
-			return new ModelAndView("redirect:/" + "login");
+		if (tokenStatus == null || tokenStatus != null && !tokenStatus.isStatus()) {
+			ModelAndView model = new ModelAndView("redirect:" + "/login");
+			model.setStatus(HttpStatus.OK);
+			return model;
+		}
 
 		return mv;
 	}
@@ -126,9 +120,26 @@ public class HomeController {
 
 		TokenStatus tokenStatus = frontendService.isValidToken(request);
 
-		if (tokenStatus == null || tokenStatus != null && !tokenStatus.isStatus())
-			return new ModelAndView("redirect:/" + "login");
+		if (tokenStatus == null || tokenStatus != null && !tokenStatus.isStatus()) {
+			ModelAndView model = new ModelAndView("redirect:" + "/login");
+			model.setStatus(HttpStatus.OK);
+			return model;
+		}
+		frontendService.removeAllTokens(request);
 
+		return new ModelAndView("redirect:" + "/login");
+	}
+
+	@GetMapping("/orders")
+	public ModelAndView order(HttpServletRequest request) {
+
+		TokenStatus tokenStatus = frontendService.isValidToken(request);
+
+		if (tokenStatus == null || tokenStatus != null && !tokenStatus.isStatus()) {
+			ModelAndView model = new ModelAndView("redirect:" + "/login");
+			model.setStatus(HttpStatus.OK);
+			return model;
+		}
 		frontendService.removeAllTokens(request);
 
 		return new ModelAndView("redirect:" + "/");
