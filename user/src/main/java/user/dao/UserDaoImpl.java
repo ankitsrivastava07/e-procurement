@@ -2,15 +2,13 @@ package user.dao;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import user.dao.entity.LoginEntity;
 import user.dao.entity.UserDetailEntity;
 import user.dao.repository.LoginRepository;
 import user.dao.repository.UserDetailRepository;
-import user.exceptionHandle.UserNotFoundException;
+import user.exceptionHandle.EmailAlreadyExistException;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -22,20 +20,19 @@ public class UserDaoImpl implements UserDao {
 	UserDetailRepository userDetailRepository;
 
 	@Override
-	public LoginEntity findByUserNameAndPassword(String username, String password) {
+	public LoginEntity findByEmailAndPassword(String email, String password) {
 
-		return loginRepository.findByUserNameAndPassword(username.toLowerCase(), password);
+		return loginRepository.findByEmailAndPassword(email, password);
 	}
 
 	@Override
-	public Boolean isUserBlocked(String username) {
-		return loginRepository.isUserBlocked(username.toLowerCase());
+	public Boolean isUserBlocked(String email) {
+		return loginRepository.isUserBlocked(email);
 	}
 
 	@Override
-	public String findByUserName(String username) {
-		return loginRepository.findByUserName(username).getUserName();
-
+	public Long findByEmailOrMobile(String username) {
+		return loginRepository.findByEmailOrMobile(username);
 	}
 
 	@Override
@@ -56,7 +53,7 @@ public class UserDaoImpl implements UserDao {
 		Optional<LoginEntity> entity = loginRepository.findById(id);
 
 		if (entity.isEmpty())
-			throw new UserNotFoundException("User not found Exception");
+			throw new EmailAlreadyExistException("User not found Exception");
 
 		LoginEntity loginEntity = entity.get();
 
@@ -68,6 +65,15 @@ public class UserDaoImpl implements UserDao {
 
 		loginRepository.save(loginEntity);
 
+	}
+
+	@Override
+	public void register(UserDetailEntity userDetailEntity) {
+	
+		UserDetailEntity userDetailEntity2= userDetailRepository.save(userDetailEntity);
+		
+		
+		
 	}
 
 }

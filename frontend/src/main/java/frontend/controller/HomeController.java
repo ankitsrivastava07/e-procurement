@@ -2,6 +2,7 @@ package frontend.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,7 @@ public class HomeController {
 
 		ModelAndView model = new ModelAndView();
 		model.setViewName("index");
+		model.addObject("userName", "");
 
 		TokenStatus tokenStatus = frontendService.isValidToken(request);
 		if (tokenStatus != null)
@@ -54,7 +56,7 @@ public class HomeController {
 
 		if (loginStatus.isStatus())
 			frontendService.setCookie(request, response, loginStatus);
-	
+
 		return new ResponseEntity<>(loginStatus.getMessage(), HttpStatus.OK);
 
 	}
@@ -71,8 +73,27 @@ public class HomeController {
 	@GetMapping("/register")
 	public ModelAndView register() {
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("index");
+		mv.setViewName("sign-up");
 		return mv;
+	}
+
+	@PostMapping("/register")
+	public ResponseEntity<?> register(@RequestBody CreateUserRequestDto createUserRequestDto,
+			HttpServletRequest request) {
+
+		TokenStatus tokenStatus = frontendService.isValidToken(request);
+
+		if (tokenStatus != null && tokenStatus.isStatus()) {
+			//return 
+		}
+
+		CreateUserResponseStatus status = apiGatewayRequestUri.register(createUserRequestDto).getBody();
+
+		if (status.isStatus()) {
+			status.setMessage("Success fully regiestered");
+			return new ResponseEntity<>(status, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(status, HttpStatus.OK);
 	}
 
 	@GetMapping("/login")
@@ -144,5 +165,12 @@ public class HomeController {
 
 		return new ModelAndView("redirect:" + "/");
 	}
+
+//	@RequestMapping(value = "/error", method = RequestMethod.GET)
+//	public ModelAndView error(HttpServletResponse response) throws IOException {
+//		response.sendRedirect("/error");
+//		ModelAndView model = new ModelAndView("error/error");
+//		return model;
+//	}
 
 }

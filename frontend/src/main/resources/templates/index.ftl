@@ -92,7 +92,7 @@
                                     </ul>
                               <#else>
                               <li><a href="/login">Sign in</a></li>
-                              <li><a href="/signout">Sign up</a></li>      
+                              <li><a href="/register">Sign up</a></li>      
 							</#if>
 							</li>
 							</ul>

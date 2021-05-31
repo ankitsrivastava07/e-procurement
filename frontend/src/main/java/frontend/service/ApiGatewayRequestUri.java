@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import frontend.controller.ChangePasswordRequestDto;
+import frontend.controller.CreateUserRequestDto;
+import frontend.controller.CreateUserResponseStatus;
 import frontend.controller.LoginStatus;
 import frontend.controller.UserCredential;
 
@@ -14,6 +16,9 @@ public interface ApiGatewayRequestUri {
 
 	@PostMapping("/users/login")
 	public ResponseEntity<LoginStatus> createAuthenticationToken(@RequestBody UserCredential userCredential);
+
+	@PostMapping("/users/register")
+	public ResponseEntity<CreateUserResponseStatus> register(@RequestBody CreateUserRequestDto createUserRequestDto);
 
 	@PostMapping("/users/change-password")
 	public ResponseEntity<ChangePasswordResponseStatus> changePassword(

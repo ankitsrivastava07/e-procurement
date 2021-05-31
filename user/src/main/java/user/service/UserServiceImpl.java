@@ -11,11 +11,16 @@ import user.configure.JwtTokenUtil;
 import user.constant.ResponseStatus;
 import user.controller.ChangePasswordRequestDto;
 import user.controller.ChangePasswordResponseStatus;
+import user.controller.CreateUserRequestDto;
 import user.controller.LoginStatus;
 import user.dao.UserDao;
 import user.dao.entity.LoginEntity;
+import user.dao.entity.UserDetailEntity;
+import user.exceptionHandle.EmailAlreadyExistException;
 import user.exceptionHandle.InvalidCredentialException;
+import user.exceptionHandle.MobileNumberAlreadyExistException;
 import user.exceptionHandle.UserBlockedException;
+import user.translator.ObjectTranslator;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -29,6 +34,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
+	private ObjectTranslator translator;
+
 	@Autowired
 	private JwtSessionServiceProxy jwtSessionServiceProxy;
 
@@ -39,19 +46,26 @@ public class UserServiceImpl implements UserService {
 			throw new UserBlockedException("Your account has been blocked for 24 hours");
 	}
 
+	public void findByEmailOrUserName(String username) {
+		Boolean isBlockend = userDao.isUserBlocked(username);
+
+		if (Objects.nonNull(isBlockend) && isBlockend)
+			throw new UserBlockedException("Your account has been blocked for 24 hours");
+	}
+
 	@Override
-	public LoginStatus findByUserNameAndPassword(String username, String password) {
+	public LoginStatus findByEmailAndPassword(String email, String password) {
 
-		isUserBlocked(username);
+		isUserBlocked(email);
 
-		LoginEntity entity = userDao.findByUserNameAndPassword(username, password);
+		LoginEntity entity = userDao.findByEmailAndPassword(email, password);
 
 		if (Objects.isNull(entity))
 			throw new InvalidCredentialException("Invalid username or password");
 
-		String token = jwtTokenUtil.generateToken(entity.getUserName(), entity.getUserId());
+		String token = jwtTokenUtil.generateToken(entity.getId());
 
-		jwtSessionServiceProxy.saveToken(jwtTokenUtil.generateToken(entity.getUserName(), entity.getUserId()));
+		jwtSessionServiceProxy.saveToken(jwtTokenUtil.generateToken(entity.getId()));
 
 		String firstName = getFirstName(token);
 
@@ -67,8 +81,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String findByUserName(String username) {
-		return userDao.findByUserName(username);
+	public void findByEmailOrMobile(CreateUserRequestDto createUserRequestDto) {
+
+		if (userDao.findByEmailOrMobile(createUserRequestDto.getEmail()) != 0)
+			throw new EmailAlreadyExistException("Some one already registered with this email");
+
+		if (userDao.findByEmailOrMobile(createUserRequestDto.getMobile()) != 0)
+			throw new MobileNumberAlreadyExistException("Mobile number already taken");
+
 	}
 
 	@Override
@@ -98,6 +118,35 @@ public class UserServiceImpl implements UserService {
 
 		return changePasswordResponseStatus;
 
+	}
+
+	@Override
+	public CreateUserResponseStatus register(CreateUserRequestDto createUserRequestDto) {
+
+		findByEmailOrMobile(createUserRequestDto);
+
+		UserDetailEntity userDetailEntity = new UserDetailEntity();
+
+		userDetailEntity.setFirstName(createUserRequestDto.getFirstName());
+		userDetailEntity.setLastName(createUserRequestDto.getLastName());
+
+		LoginEntity loginEntity = new LoginEntity();
+
+		loginEntity.setMobile(createUserRequestDto.getMobile());
+		loginEntity.setEmail(createUserRequestDto.getEmail());
+		loginEntity.setNewPassword(createUserRequestDto.getPassword());
+		loginEntity.setIsBlocked(Boolean.FALSE);
+
+		userDetailEntity.setLoginId(loginEntity);
+
+		userDao.register(userDetailEntity);
+
+		CreateUserResponseStatus responseStatus = new CreateUserResponseStatus();
+		responseStatus.setMessage(ResponseStatus.MESSAGE);
+		responseStatus.setStatus(ResponseStatus.TRUE);
+		responseStatus.setCreatedAt(ResponseStatus.getLocalDateTime());
+
+		return responseStatus;
 	}
 
 }

@@ -2,18 +2,21 @@ package user.service;
 
 import user.controller.ChangePasswordRequestDto;
 import user.controller.ChangePasswordResponseStatus;
+import user.controller.CreateUserRequestDto;
 import user.controller.LoginStatus;
 
 public interface UserService {
 
-	LoginStatus findByUserNameAndPassword(String username, String password);
+	LoginStatus findByEmailAndPassword(String username, String password);
 
 	void isUserBlocked(String username);
 
-	String findByUserName(String username);
+	void findByEmailOrMobile(CreateUserRequestDto createUserRequestDto);
 
 	String getFirstName(String token);
 
 	ChangePasswordResponseStatus changePassword(ChangePasswordRequestDto changePasswordRequest);
+
+	CreateUserResponseStatus register(CreateUserRequestDto createUserRequestDto);
 
 }

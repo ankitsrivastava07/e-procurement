@@ -1,17 +1,20 @@
 package user.dao;
 
 import user.dao.entity.LoginEntity;
+import user.dao.entity.UserDetailEntity;
 
 public interface UserDao {
 
-	LoginEntity findByUserNameAndPassword(String username, String password);
+	LoginEntity findByEmailAndPassword(String email, String password);
 
-	Boolean isUserBlocked(String username);
+	Boolean isUserBlocked(String email);
 
-	String findByUserName(String username);
+	Long findByEmailOrMobile(String email);
 
 	String getFirstName(Long id);
 
 	void changePassword(String password, Long id);
 
+	void register(UserDetailEntity userDetailEntity);
+	
 }
