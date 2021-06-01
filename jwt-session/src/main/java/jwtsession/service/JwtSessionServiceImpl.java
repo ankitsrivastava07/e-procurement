@@ -12,7 +12,6 @@ import jwtsession.controller.TokenStatus;
 import jwtsession.dao.JwtSessionDao;
 import jwtsession.dao.entity.JwtSessionEntity;
 import jwtsession.dao.repository.JwtSessionRepository;
-import jwtsession.exceptionHandle.InvalidTokenException;
 import jwtsession.jwtutil.JwtTokenUtil;
 
 @Service
@@ -20,9 +19,6 @@ public class JwtSessionServiceImpl implements JwtSessionService {
 
 	@Autowired
 	private JwtSessionDao jwtSessionDao;
-
-	@Autowired
-	TokenStatus tokenStatus;
 
 	@Autowired
 	JwtSessionRepository repository;
@@ -36,20 +32,24 @@ public class JwtSessionServiceImpl implements JwtSessionService {
 	@Override
 	public TokenStatus isValidToken(String token) {
 
-		jwtTokenUtil.validateToken(token);
+		JwtSessionEntity jwtSessionEntity = jwtSessionDao.isValidToken(token);
+		TokenStatus tokenStatus = new TokenStatus();
+		if (jwtSessionEntity != null) {
 
-		Boolean status = jwtSessionDao.isValidToken(token);
+			jwtTokenUtil.validateToken(token);
 
-		if (!status)
-			throw new InvalidTokenException("Invalid Token or token does not exist");
+			tokenStatus.setStatus(TokenStatusConstant.TRUE);
+			tokenStatus.setMessage(TokenStatusConstant.MESSAGE);
+			tokenStatus.setToken(token);
+			String firstName = userServiceProxy.getFirstName(token).getBody();
+			tokenStatus.setFirstName(firstName);
+			return tokenStatus;
+		}
 
-		tokenStatus.setStatus(TokenStatusConstant.TRUE);
-		tokenStatus.setMessage(TokenStatusConstant.MESSAGE);
-		tokenStatus.setToken(token);
-		String firstName = userServiceProxy.getFirstName(token).getBody();
-		tokenStatus.setFirstName(firstName);
-
+		tokenStatus.setStatus(TokenStatusConstant.FALSE);
+		tokenStatus.setMessage("Invalid Token or Token does not exist");
 		return tokenStatus;
+
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class JwtSessionServiceImpl implements JwtSessionService {
 		Long id = jwtTokenUtil.getUserId(token);
 
 		JwtSessionEntity entity = new JwtSessionEntity();
-
+		TokenStatus tokenStatus = new TokenStatus();
 		entity.setUserId(id);
 		entity.setToken(token);
 
@@ -73,14 +73,12 @@ public class JwtSessionServiceImpl implements JwtSessionService {
 	@Override
 	public TokenStatus removeToken(String token) {
 
-		JwtSessionEntity jwtEntity = jwtSessionDao.removeToken(token);
-
-		if (jwtEntity != null) {
+		Integer count = jwtSessionDao.removeToken(token);
+		TokenStatus tokenStatus = new TokenStatus();
+		if (count != null) {
 
 			tokenStatus.setStatus(TokenStatusConstant.TRUE);
 			tokenStatus.setMessage(TokenStatusConstant.MESSAGE);
-			tokenStatus.setToken(jwtEntity.getToken());
-			tokenStatus.setCreatedAt(jwtEntity.getCreatedAt());
 		}
 
 		return tokenStatus;
@@ -91,7 +89,7 @@ public class JwtSessionServiceImpl implements JwtSessionService {
 	public TokenStatus removeAllTokens(Map<String, String> map) {
 
 		Long user_id = null;
-
+		TokenStatus tokenStatus = new TokenStatus();
 		if (map != null && !map.isEmpty() && map.get("request").equals("change-password")) {
 			String token = map.get("token");
 			user_id = jwtTokenUtil.getUserId(token);
@@ -100,7 +98,7 @@ public class JwtSessionServiceImpl implements JwtSessionService {
 
 		else if (!map.isEmpty()) {
 			user_id = jwtTokenUtil.getUserId(map.get("token"));
-			 repository.removeAllTokensById(user_id);
+			repository.removeAllTokensById(user_id);
 		}
 		tokenStatus.setStatus(TokenStatusConstant.TRUE);
 		tokenStatus.setCreatedAt(LocalDateTime.now());

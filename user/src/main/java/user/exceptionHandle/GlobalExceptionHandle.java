@@ -1,6 +1,8 @@
 package user.exceptionHandle;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -49,11 +51,26 @@ public class GlobalExceptionHandle {
 	@ExceptionHandler(MobileNumberAlreadyExistException.class)
 	public ResponseEntity<?> userBlocked(MobileNumberAlreadyExistException exception) {
 
-		CreateUserResponseStatus CreateUserResponseStatus = new CreateUserResponseStatus();
-		CreateUserResponseStatus.setStatus(Boolean.FALSE);
-		CreateUserResponseStatus.setMessage(exception.getMessage());
+		CreateUserResponseStatus createUserResponseStatus = new CreateUserResponseStatus();
+		createUserResponseStatus.setStatus(Boolean.FALSE);
+		Map<String, String> map = new HashMap<>();
 
-		return new ResponseEntity<>(CreateUserResponseStatus, HttpStatus.OK);
+		map.put("mobile", exception.getMessage());
+		createUserResponseStatus.setErrorMessage(map);
+
+		return new ResponseEntity<>(createUserResponseStatus, HttpStatus.OK);
+	}
+
+	@ExceptionHandler(EmailAlreadyExistException.class)
+	public ResponseEntity<?> emailAlreadyExistException(EmailAlreadyExistException exception) {
+
+		CreateUserResponseStatus createUserResponseStatus = new CreateUserResponseStatus();
+		createUserResponseStatus.setStatus(Boolean.FALSE);
+		Map<String, String> map = new HashMap<>();
+		map.put("email", exception.getMessage());
+		createUserResponseStatus.setErrorMessage(map);
+
+		return new ResponseEntity<>(createUserResponseStatus, HttpStatus.OK);
 	}
 
 }

@@ -7,7 +7,7 @@ import user.controller.LoginStatus;
 
 public interface UserService {
 
-	LoginStatus findByEmailAndPassword(String username, String password);
+	LoginStatus findByEmailAndPassword(String email, String password);
 
 	void isUserBlocked(String username);
 

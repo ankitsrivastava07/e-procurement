@@ -28,7 +28,7 @@ public class UserController {
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody UserCredential userCredentail,
 			HttpServletResponse response) throws Exception {
 
-		LoginStatus loginStatus = userService.findByEmailAndPassword(userCredentail.getUserName(),
+		LoginStatus loginStatus = userService.findByEmailAndPassword(userCredentail.getEmail(),
 				userCredentail.getPassword());
 
 		return new ResponseEntity<>(loginStatus, HttpStatus.OK);

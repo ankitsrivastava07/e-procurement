@@ -4,8 +4,7 @@
 <head>
 <!-- Required meta tags-->
 <meta charset="UTF-8">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="Colorlib Templates">
 <meta name="author" content="Colorlib">
 <meta name="keywords" content="Colorlib Templates">
@@ -46,6 +45,12 @@ input[type=number] {
 	-moz-appearance: textfield;
 }
 
+.email-error {
+  border-color:red;
+}
+
+.align-right { text-align:right; }
+
 .error {
 	font-size: 14px;
 	color: #da534d;
@@ -66,13 +71,13 @@ input[type=number] {
 							<div class="col-2">
 								<div class="input-group">
 									<label class="label">first name</label> <input
-										class="input--style-4" type="text" name="firstName" id="firstName">
+										class="input--style-4" type="text" name="firstName" maxlength="100" id="firstName">
 								</div>
 							</div>
 							<div class="col-2">
 								<div class="input-group">
 									<label class="label">last name</label> <input
-										class="input--style-4" type="text" name="lastName" id="lastName">
+										class="input--style-4" type="text" name="lastName" maxlength="100" id="lastName">
 								</div>
 							</div>
 						</div>
@@ -82,6 +87,7 @@ input[type=number] {
 								<div class="input-group">
 									<label class="label">Mobile Number</label> <input
 										class="input--style-4" type="number" id="mobile" name="mobile">
+										
 								</div>
 							</div>
 
@@ -97,28 +103,21 @@ input[type=number] {
 								<div class="col-2">
 									<div class="input-group">
 										<label class="label">Password</label> <input
-											class="input--style-4" type="password" id="password"
-											name="password">
+											class="input--style-4" type="password" minlength="8" id="password"
+											name="password" maxlength="20">
 									</div>
 								</div>
 							</div>
 							<div class="p-t-15">
-								<center>
-									<button class="btn btn--radius-2 btn--blue" type="submit">Submit</button>
-								</center>
+									<button class="btn btn--radius-2 btn--blue" id="submit" type="submit">Submit</button>
+									<span class="align-right">Alredy have an account 
+									<a href="/login">Login</button></span>
 							</div>
 					</form>
 				</div>
 			</div>
 		</div>
 	</div>
-
-	<!-- Jquery JS-->
-	<!-- Vendor JS-->
-	<script src="register-form/vendor/select2/select2.min.js"></script>
-	<script src="register-form/vendor/datepicker/moment.min.js"></script>
-	<script src="register-form/vendor/datepicker/daterangepicker.js"></script>
-
 	<!-- Main JS-->
 	<script src="register-form/js/register.js"></script>
 

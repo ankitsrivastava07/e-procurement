@@ -7,8 +7,8 @@ import user.dao.entity.LoginEntity;
 
 public interface LoginRepository extends JpaRepository<LoginEntity, Long> {
 
-	@Query(value = "select count(id) from login where email = ?1 or mobile = ?1", nativeQuery = true)
-	Long findByEmailOrMobile(String email);
+	@Query(value = "select * from login l where email = ?1 or mobile = ?1", nativeQuery = true)
+	LoginEntity findByEmailOrMobile(String emailOrMobile);
 
 	@Query(value = "select * from login where (mobile = ?1 or email = ?1) and new_password = ?2", nativeQuery = true)
 	LoginEntity findByEmailAndPassword(String email, String password);

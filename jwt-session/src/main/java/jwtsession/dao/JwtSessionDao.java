@@ -4,10 +4,11 @@ import jwtsession.dao.entity.JwtSessionEntity;
 
 public interface JwtSessionDao {
 
-	Boolean isValidToken(String jwt);
+	JwtSessionEntity isValidToken(String jwt);
 
 	String saveToken(JwtSessionEntity entity);
-	
-	JwtSessionEntity removeToken(String token);
-	
+
+	Integer removeToken(String token);
+
+	Boolean isTokenExist(String token);
 }

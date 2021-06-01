@@ -67,9 +67,10 @@ background-color: #fdf6f6;
 		      	</div>
 		      	<h3 class="text-center mb-4">Login</h3>
 			<div class="modal-body" id="modal1-body">
+			
 		      		<div class="form-group">
-		      		<label for="recipient-name" class="col-form-label">Email ID / Username </label>
-		      			<input type="text" class="form-control rounded-left" maxlength="30" name="userName" id="userName" autocomplete=off Placeholder="Enter your email/username">
+		      		<label for="recipient-name" class="col-form-label">Email or Mobile number</label>
+		      			<input type="text" class="form-control rounded-left" maxlength="30" name="email" id="email" autocomplete=off Placeholder="Enter your email/mobile number">
 		      		</div>
 	            <div class="form-group">
 	            <label for="recipient-name" class="col-form-label">Password</label>
@@ -77,17 +78,10 @@ background-color: #fdf6f6;
 	            </div>
 	            <div class="form-group">
 	            	<button type="submit" class="form-control btn btn-primary rounded submit px-3">Login</button>
-	            </div>
-	            <div class="form-group d-md-flex">
-	            	<div class="w-50">
-	            		<label class="checkbox-wrap checkbox-primary">Remember Me
-									  <input type="checkbox" checked>
-									  <span class="checkmark"></span>
-									</label>
-								</div>
-								<div class="w-50 text-md-right">
-									<a href="#">Forgot Password</a>
-								</div>
+	            	<span>Don't have an account?
+	            	<a href="/register">Create Account</a>
+	            	</span>
+									
 	            </div>
 	          </form>
 	        </div>

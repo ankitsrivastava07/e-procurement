@@ -9,23 +9,11 @@ $(document).ready(function() {
 
 $(document).ready(function() {
 
-
-	//$('.form').append($('<label id="email-error" class="error" for="email"></label>'));
-
-	/*jQuery.validator.addMethod("emailValidation", function(value, element) {
-		var email_flag = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(value);
-		var username_flag = this.optional(element) || /^[a-zA-Z0-9 ]+$/.test(value);
-		if (email_flag == true || username_flag == true)
-			return true;
-	}, "Please enter valid email/username"
-	);
-*/
-
 	$("#login-form").validate({
 
 		rules: {
 
-			userName: {
+			email: {
 				required: true,
 			},
 
@@ -36,8 +24,8 @@ $(document).ready(function() {
 		},
 		messages: {
 
-			userName: {
-				required: "Please enter your email/username",
+			email: {
+				required: "Please enter your email/mobile number",
 			},
 
 			password: {
@@ -48,7 +36,7 @@ $(document).ready(function() {
 
 			var formData = {
 
-				"userName": $("#userName").val(),
+				"email": $("#email").val(),
 				"password": $("#password").val()
 			}
 			login(formData);

@@ -1,6 +1,7 @@
 package user.service;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import lombok.Data;
 
@@ -12,4 +13,6 @@ public class CreateUserResponseStatus {
 	private String message;
 
 	private LocalDateTime createdAt;
+
+	private Map<String, String> errorMessage;
 }

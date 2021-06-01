@@ -9,7 +9,7 @@ public interface UserDao {
 
 	Boolean isUserBlocked(String email);
 
-	Long findByEmailOrMobile(String email);
+	Integer findByEmailOrMobile(String email);
 
 	String getFirstName(Long id);
 

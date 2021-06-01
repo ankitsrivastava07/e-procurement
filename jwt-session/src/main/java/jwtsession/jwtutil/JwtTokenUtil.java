@@ -44,14 +44,14 @@ public class JwtTokenUtil {
 		return expiration.before(new Date());
 	}
 
-	public String generateToken(String username, Long userId) {
+	public String generateToken(Long userId) {
 		Map<String, Object> claims = new HashMap<>();
-		return doGenerateToken(claims, username, userId);
+		return doGenerateToken(claims, userId);
 	}
 
-	private String doGenerateToken(Map<String, Object> claims, String subject, Long userId) {
+	private String doGenerateToken(Map<String, Object> claims,Long userId) {
 
-		return Jwts.builder().setClaims(claims).setSubject(subject).setSubject(String.valueOf(userId))
+		return Jwts.builder().setClaims(claims).setSubject(String.valueOf(userId))
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
 				.signWith(SignatureAlgorithm.HS512, secret).compact();

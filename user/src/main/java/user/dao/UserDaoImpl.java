@@ -31,8 +31,9 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public Long findByEmailOrMobile(String username) {
-		return loginRepository.findByEmailOrMobile(username);
+	public Integer findByEmailOrMobile(String username) {
+		
+		return loginRepository.findByEmailOrMobile(username)==null ? 0: 1;
 	}
 
 	@Override
@@ -71,8 +72,6 @@ public class UserDaoImpl implements UserDao {
 	public void register(UserDetailEntity userDetailEntity) {
 	
 		UserDetailEntity userDetailEntity2= userDetailRepository.save(userDetailEntity);
-		
-		
 		
 	}
 

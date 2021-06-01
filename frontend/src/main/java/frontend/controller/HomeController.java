@@ -71,9 +71,15 @@ public class HomeController {
 	}
 
 	@GetMapping("/register")
-	public ModelAndView register() {
+	public ModelAndView register(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("sign-up");
+
+		TokenStatus tokenStatus = frontendService.isValidToken(request);
+
+		if (tokenStatus != null && tokenStatus.isStatus())
+			return new ModelAndView("redirect:" + "/login");
+
 		return mv;
 	}
 
@@ -81,18 +87,20 @@ public class HomeController {
 	public ResponseEntity<?> register(@RequestBody CreateUserRequestDto createUserRequestDto,
 			HttpServletRequest request) {
 
+		String email = createUserRequestDto.getEmail().length() == 0 ? null : createUserRequestDto.getEmail();
+
+		createUserRequestDto.setEmail(email);
+
 		TokenStatus tokenStatus = frontendService.isValidToken(request);
 
 		if (tokenStatus != null && tokenStatus.isStatus()) {
-			//return 
+			// return
 		}
 
 		CreateUserResponseStatus status = apiGatewayRequestUri.register(createUserRequestDto).getBody();
-
-		if (status.isStatus()) {
-			status.setMessage("Success fully regiestered");
+		if (!status.isStatus())
 			return new ResponseEntity<>(status, HttpStatus.OK);
-		}
+
 		return new ResponseEntity<>(status, HttpStatus.OK);
 	}
 
@@ -103,9 +111,13 @@ public class HomeController {
 		TokenStatus tokenStatus = frontendService.isValidToken(request);
 
 		if (tokenStatus != null && tokenStatus.isStatus()) {
+
+			ModelAndView model = new ModelAndView("redirect:" + "/login");
+			if (tokenStatus != null)
+				model.addObject("message", tokenStatus.getMessage());
 			return new ModelAndView("redirect:" + "/");
 		}
-
+		mv.addObject("message", "");
 		mv.setViewName("login");
 		return mv;
 	}

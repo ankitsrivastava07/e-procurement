@@ -1,6 +1,5 @@
 package jwtsession.dao;
 
-import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +17,8 @@ public class JwtSessionDaoImpl implements JwtSessionDao {
 	TokenStatus tokenStatus;
 
 	@Override
-	public Boolean isValidToken(String token) {
-		return repository.findBytoken(token) == null ? false : true;
+	public JwtSessionEntity isValidToken(String token) {
+		return repository.findByToken(token);
 	}
 
 	@Override
@@ -29,15 +28,16 @@ public class JwtSessionDaoImpl implements JwtSessionDao {
 
 	@Transactional
 	@Override
-	public JwtSessionEntity removeToken(String token) {
+	public Integer removeToken(String token) {
 
-		JwtSessionEntity entity = repository.findBytoken(token);
+		Integer deleted = repository.removeToken(token);
 
-		if (Objects.isNull(entity))
-			return null;
+		return deleted;
+	}
 
-		repository.deleteById(entity.getId());
-
-		return entity;
+	@Override
+	public Boolean isTokenExist(String token) {
+		repository.findByToken(token);
+		return null;
 	}
 }

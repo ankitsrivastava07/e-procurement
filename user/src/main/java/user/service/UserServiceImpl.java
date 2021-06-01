@@ -20,7 +20,6 @@ import user.exceptionHandle.EmailAlreadyExistException;
 import user.exceptionHandle.InvalidCredentialException;
 import user.exceptionHandle.MobileNumberAlreadyExistException;
 import user.exceptionHandle.UserBlockedException;
-import user.translator.ObjectTranslator;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -34,20 +33,11 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
-	private ObjectTranslator translator;
-
 	@Autowired
 	private JwtSessionServiceProxy jwtSessionServiceProxy;
 
-	public void isUserBlocked(String username) {
-		Boolean isBlockend = userDao.isUserBlocked(username);
-
-		if (Objects.nonNull(isBlockend) && isBlockend)
-			throw new UserBlockedException("Your account has been blocked for 24 hours");
-	}
-
-	public void findByEmailOrUserName(String username) {
-		Boolean isBlockend = userDao.isUserBlocked(username);
+	public void isUserBlocked(String email) {
+		Boolean isBlockend = userDao.isUserBlocked(email);
 
 		if (Objects.nonNull(isBlockend) && isBlockend)
 			throw new UserBlockedException("Your account has been blocked for 24 hours");
@@ -83,7 +73,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void findByEmailOrMobile(CreateUserRequestDto createUserRequestDto) {
 
-		if (userDao.findByEmailOrMobile(createUserRequestDto.getEmail()) != 0)
+		if (createUserRequestDto.getEmail()!=null && userDao.findByEmailOrMobile(createUserRequestDto.getEmail()) != 0)
 			throw new EmailAlreadyExistException("Some one already registered with this email");
 
 		if (userDao.findByEmailOrMobile(createUserRequestDto.getMobile()) != 0)

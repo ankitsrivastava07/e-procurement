@@ -82,7 +82,7 @@ background-color: #fdf6f6;
 	              <input type="password" class="form-control rounded-left" maxlength="20" name="password_confirm" id="password_confirm" Placeholder="Enter confirm password">
 	            </div>
 	            <div class="form-group">
-	            	<button type="submit" class="form-control btn btn-primary rounded submit px-3">Login</button>
+	            	<button type="submit" class="form-control btn btn-primary rounded submit px-3">Submit</button>
 	            </div>
 	            <div class="form-group d-md-flex">
 	            	<div class="w-50">
