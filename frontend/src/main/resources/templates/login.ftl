@@ -40,7 +40,7 @@ background-color: #fdf6f6;
 }
 
 .alert{
-    padding: 10px;
+    padding: 8px;
     /* margin-bottom: 20px; */
     /* border: 1px solid transparent; */
     border-radius: 4px;
