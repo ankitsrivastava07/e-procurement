@@ -80,7 +80,7 @@ function login(formData) {
 
 				if (response.responseText == "Success")
 					window.location.href = "/"
-
+                 $("#password").val("");
 			},
 			error: function(error) {
 				alert("Something went wrong  please try again later")
@@ -111,7 +111,6 @@ function changePassword(formData) {
 
 				if (response.statusText == "success")
 					window.location.href = "/"
-
 			},
 			error: function(error) {
 				alert("Something went wrong  please try again later")

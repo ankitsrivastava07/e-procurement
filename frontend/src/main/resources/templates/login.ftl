@@ -68,6 +68,9 @@ background-color: #fdf6f6;
 		      	<h3 class="text-center mb-4">Login</h3>
 			<div class="modal-body" id="modal1-body">
 			
+			<#if tokenStatus?? && tokenStatus.message?has_content>
+			<div class="alert alert-danger" role="alert"> ${tokenStatus.message} </div>
+			</#if>
 		      		<div class="form-group">
 		      		<label for="recipient-name" class="col-form-label">Email or Mobile number</label>
 		      			<input type="text" class="form-control rounded-left" maxlength="30" name="email" id="email" autocomplete=off Placeholder="Enter your email/mobile number">

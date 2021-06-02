@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jwtsession.constant.TokenStatusConstant;
 import jwtsession.controller.TokenStatus;
 import jwtsession.dao.JwtSessionDao;
 import jwtsession.dao.entity.JwtSessionEntity;
 import jwtsession.dao.repository.JwtSessionRepository;
-import jwtsession.jwtutil.JwtTokenUtil;
+import jwtsession.jwtutil.JwtAccessTokenUtil;
+import jwtsession.jwtutil.JwtRefreshTokenUtil;
 
 @Service
 public class JwtSessionServiceImpl implements JwtSessionService {
@@ -27,45 +29,70 @@ public class JwtSessionServiceImpl implements JwtSessionService {
 	UserServiceProxy userServiceProxy;
 
 	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private JwtAccessTokenUtil jwtAccessTokenUtil;
+
+	@Autowired
+	private JwtRefreshTokenUtil jwtRefreshTokenUtil;
 
 	@Override
-	public TokenStatus isValidToken(String token) {
+	public TokenStatus isValidToken(String accessToken) {
 
-		JwtSessionEntity jwtSessionEntity = jwtSessionDao.isValidToken(token);
 		TokenStatus tokenStatus = new TokenStatus();
-		if (jwtSessionEntity != null) {
 
-			jwtTokenUtil.validateToken(token);
+		try {
 
-			tokenStatus.setStatus(TokenStatusConstant.TRUE);
-			tokenStatus.setMessage(TokenStatusConstant.MESSAGE);
-			tokenStatus.setToken(token);
-			String firstName = userServiceProxy.getFirstName(token).getBody();
-			tokenStatus.setFirstName(firstName);
-			return tokenStatus;
+			jwtAccessTokenUtil.validateToken(accessToken);
+
+		} catch (ExpiredJwtException exception) {
+
+			JwtSessionEntity jwtSessionToken = repository.findByAccessToken(accessToken);
+
+			if (jwtSessionToken != null) {
+
+				jwtAccessTokenUtil.validateToken(jwtSessionToken.getRefreshToken());
+
+				accessToken = jwtAccessTokenUtil.generateAccessToken(jwtSessionToken.getId());
+
+				String refreshToken = jwtRefreshTokenUtil.generateRefreshToken(jwtSessionToken.getId());
+
+				jwtSessionToken.setAccessToken(accessToken);
+
+				jwtSessionToken.setRefreshToken(refreshToken);
+
+				repository.save(jwtSessionToken);
+
+			}
 		}
+		tokenStatus.setStatus(TokenStatusConstant.TRUE);
+		tokenStatus.setMessage(TokenStatusConstant.MESSAGE);
+		tokenStatus.setAccessToken(accessToken);
 
-		tokenStatus.setStatus(TokenStatusConstant.FALSE);
-		tokenStatus.setMessage("Invalid Token or Token does not exist");
+		jwtAccessTokenUtil.validateToken(accessToken);
+
+		String firstName = userServiceProxy.getFirstName(accessToken).getBody();
+		tokenStatus.setFirstName(firstName);
 		return tokenStatus;
 
 	}
 
 	@Override
-	public TokenStatus saveToken(String token) {
+	public TokenStatus generateToken(Long userId) {
 
-		Long id = jwtTokenUtil.getUserId(token);
+		TokenStatus tokenStatus = new TokenStatus();
+
+		String accessToken = jwtAccessTokenUtil.generateAccessToken(userId);
+		String refreshToken = jwtRefreshTokenUtil.generateRefreshToken(userId);
 
 		JwtSessionEntity entity = new JwtSessionEntity();
-		TokenStatus tokenStatus = new TokenStatus();
-		entity.setUserId(id);
-		entity.setToken(token);
 
+		entity.setUserId(userId);
+		entity.setAccessToken(accessToken);
+		entity.setRefreshToken(refreshToken);
 		jwtSessionDao.saveToken(entity);
 
 		tokenStatus.setStatus(TokenStatusConstant.TRUE);
 		tokenStatus.setMessage(TokenStatusConstant.MESSAGE);
+		tokenStatus.setAccessToken(accessToken);
 
 		return tokenStatus;
 	}
@@ -92,12 +119,12 @@ public class JwtSessionServiceImpl implements JwtSessionService {
 		TokenStatus tokenStatus = new TokenStatus();
 		if (map != null && !map.isEmpty() && map.get("request").equals("change-password")) {
 			String token = map.get("token");
-			user_id = jwtTokenUtil.getUserId(token);
+			user_id = jwtAccessTokenUtil.getUserId(token);
 			repository.removeAllTokensNot(token, user_id);
 		}
 
 		else if (!map.isEmpty()) {
-			user_id = jwtTokenUtil.getUserId(map.get("token"));
+			user_id = jwtAccessTokenUtil.getUserId(map.get("token"));
 			repository.removeAllTokensById(user_id);
 		}
 		tokenStatus.setStatus(TokenStatusConstant.TRUE);

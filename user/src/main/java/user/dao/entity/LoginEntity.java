@@ -1,7 +1,6 @@
 package user.dao.entity;
 
 import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,8 +16,9 @@ import lombok.Data;
 public class LoginEntity {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	@Column(name = "email")
 	private String email;
 	@Column(name = "new_password", nullable = false)

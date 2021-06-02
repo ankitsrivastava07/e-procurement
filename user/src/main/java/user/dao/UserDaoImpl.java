@@ -65,7 +65,6 @@ public class UserDaoImpl implements UserDao {
 		loginEntity.setNewPassword(password);
 
 		loginRepository.save(loginEntity);
-
 	}
 
 	@Override

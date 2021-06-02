@@ -1,7 +1,6 @@
 package jwtsession.controller;
 
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import jwtsession.jwtutil.JwtTokenUtil;
 import jwtsession.service.JwtSessionService;
-
 
 @RestController
 @RequestMapping("/token-session")
@@ -21,22 +17,12 @@ public class JwtSessionController {
 	@Autowired
 	private JwtSessionService jwtSessionService;
 
-	@Autowired
-	TokenStatus tokenStatus;
-
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
-
-	
 	@PostMapping("/save-token")
-	public ResponseEntity<?> saveToken(@RequestBody String token) {
+	public ResponseEntity<?> generateToken(@RequestBody Long userId) {
 
-		TokenStatus tokenStatus = jwtSessionService.saveToken(token);
-
-		System.out.println(token);
+		TokenStatus tokenStatus = jwtSessionService.generateToken(userId);
 
 		return new ResponseEntity<>(tokenStatus, HttpStatus.OK);
-
 	}
 
 	@PostMapping("/validate-token")
@@ -56,10 +42,10 @@ public class JwtSessionController {
 
 	@PostMapping(value = "/invalidate-tokens")
 	public ResponseEntity<?> invalidateTokens(@RequestBody JwtSessionDto dto, HttpServletRequest request) {
-		
+
 		TokenStatus tokenStatus = jwtSessionService.removeAllTokens(dto.getToken());
-		
-		return new ResponseEntity<>(tokenStatus,HttpStatus.OK);
+
+		return new ResponseEntity<>(tokenStatus, HttpStatus.OK);
 	}
 
 }

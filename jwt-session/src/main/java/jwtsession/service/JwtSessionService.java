@@ -7,7 +7,7 @@ public interface JwtSessionService {
 
 	TokenStatus isValidToken(String jwt);
 
-	TokenStatus saveToken(String token);
+	TokenStatus generateToken(Long userId);
 
 	TokenStatus removeToken(String token);
 

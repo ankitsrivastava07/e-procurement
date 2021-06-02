@@ -72,7 +72,6 @@ $(document).ready(function() {
 				"firstName": $("#firstName").val(),
 				"lastName": $("#lastName").val(),
 				"email": $("#email").val(),
-				"password": $("#password").val(),
 				"mobile": $("#mobile").val(),
 				"password": $("#password").val()
 			}
@@ -92,16 +91,18 @@ $(document).ready(function() {
 				cache: false,
 				success: function(response) {
 					$(".error").remove();
-					$.each(response.errorMessage, function(key, value) {
-						var span = $('<span />').addClass(key + '-error error').html(value);
-						$("#" + key).after(span);
-					});
 
+					$(".alert").remove();
+					setTimeout(function() {
+						$.each(response.errorMessage, function(key, value) {
+							var span = $('<span />').addClass(key + '-error error').html(value);
+							$("#" + key).after(span);
+						});
+					}, 500);
 					if (response.status) {
-					$('#signup-form')[0].reset();
+						$('#signup-form')[0].reset();
 						alert("Successfully Registered your account please proceed to login");
 						window.location.href = "/login"
-
 					}
 				},
 				error: function(error) {

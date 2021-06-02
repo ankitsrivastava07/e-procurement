@@ -17,13 +17,13 @@ public class JwtSessionDaoImpl implements JwtSessionDao {
 	TokenStatus tokenStatus;
 
 	@Override
-	public JwtSessionEntity isValidToken(String token) {
-		return repository.findByToken(token);
+	public JwtSessionEntity findByAccessToken(String refreshToken) {
+		return repository.findByAccessToken(refreshToken);
 	}
 
 	@Override
-	public String saveToken(JwtSessionEntity entity) {
-		return repository.save(entity).getToken();
+	public JwtSessionEntity saveToken(JwtSessionEntity entity) {
+		return repository.save(entity);
 	}
 
 	@Transactional
@@ -37,7 +37,7 @@ public class JwtSessionDaoImpl implements JwtSessionDao {
 
 	@Override
 	public Boolean isTokenExist(String token) {
-		repository.findByToken(token);
+		repository.findByAccessToken(token);
 		return null;
 	}
 }

@@ -24,19 +24,22 @@ public class JwtSessionEntity {
 
 	@Column(name = "user_id", nullable = false)
 	private Long userId;
-	@Column(name = "token", nullable = false)
-	private String token;
+	@Column(name = "access_token", nullable = false)
+	private String accessToken;
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt;
+
+	@Column(name = "refresh_token", nullable = false)
+	private String refreshToken;
 
 	@PrePersist
 	public void prePersist() {
 		this.createdAt = LocalDateTime.now();
 	}
-	
+
 	@PreUpdate
 	public void preUpdate() {
 		this.createdAt = LocalDateTime.now();
 	}
-	
+
 }

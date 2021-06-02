@@ -27,9 +27,9 @@ public class UserDetailEntity {
 	private String firstName;
 	@Column(name = "last_name", nullable = false)
 	private String lastName;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="login_id")
+	@JoinColumn(name = "login_id")
 	private LoginEntity loginId;
 
 	@Column(name = "created_at", nullable = true)

@@ -1,9 +1,10 @@
-package jwtsession.controller;
+package user.service;
 
 import java.time.LocalDateTime;
-import org.springframework.stereotype.Component;
-import lombok.Data;
 
+import org.springframework.stereotype.Component;
+
+import lombok.Data;
 @Data
 @Component
 public class TokenStatus {

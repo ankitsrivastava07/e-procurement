@@ -12,7 +12,7 @@ import user.controller.ChangePasswordRequestDto;
 public interface JwtSessionServiceProxy {
 
 	@PostMapping(value = "/token-session/save-token")
-	ResponseEntity<String> saveToken(@RequestBody String token);
+	ResponseEntity<TokenStatus> generateToken(@RequestBody Long userId);
 
 	@PostMapping("/token-session/invalidate-tokens")
 	public ResponseEntity<?> invalidateTokens(@RequestBody ChangePasswordRequestDto dto);

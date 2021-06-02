@@ -94,7 +94,7 @@ public class HomeController {
 		TokenStatus tokenStatus = frontendService.isValidToken(request);
 
 		if (tokenStatus != null && tokenStatus.isStatus()) {
-			// return
+			 return new ResponseEntity<>("/", HttpStatus.OK);
 		}
 
 		CreateUserResponseStatus status = apiGatewayRequestUri.register(createUserRequestDto).getBody();
@@ -106,18 +106,24 @@ public class HomeController {
 
 	@GetMapping("/login")
 	public ModelAndView login(HttpServletRequest request) {
+
 		ModelAndView mv = new ModelAndView();
 
 		TokenStatus tokenStatus = frontendService.isValidToken(request);
 
-		if (tokenStatus != null && tokenStatus.isStatus()) {
+		if (tokenStatus != null && !tokenStatus.isStatus()) {
 
-			ModelAndView model = new ModelAndView("redirect:" + "/login");
-			if (tokenStatus != null)
-				model.addObject("message", tokenStatus.getMessage());
+			ModelAndView model = new ModelAndView();
+			model.addObject("tokenStatus", tokenStatus);
+			return model;
+			// return new ModelAndView("redirect:" + "/");
+		}
+
+		else if (tokenStatus != null && tokenStatus.isStatus()) {
+			ModelAndView model = new ModelAndView();
 			return new ModelAndView("redirect:" + "/");
 		}
-		mv.addObject("message", "");
+
 		mv.setViewName("login");
 		return mv;
 	}

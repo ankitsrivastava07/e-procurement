@@ -53,18 +53,16 @@ public class UserServiceImpl implements UserService {
 		if (Objects.isNull(entity))
 			throw new InvalidCredentialException("Invalid username or password");
 
-		String token = jwtTokenUtil.generateToken(entity.getId());
+		TokenStatus tokenStatus = jwtSessionServiceProxy.generateToken(entity.getId()).getBody();
 
-		jwtSessionServiceProxy.saveToken(jwtTokenUtil.generateToken(entity.getId()));
-
-		String firstName = getFirstName(token);
+		String firstName = getFirstName(tokenStatus.getAccessToken());
 
 		LoginStatus loginStatus = new LoginStatus();
 
 		loginStatus.setStatus(ResponseStatus.TRUE);
 		loginStatus.setMessage(ResponseStatus.MESSAGE);
 
-		loginStatus.setToken(token);
+		loginStatus.setToken(tokenStatus.getAccessToken());
 		loginStatus.setFirstName(firstName);
 
 		return loginStatus;
@@ -73,7 +71,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void findByEmailOrMobile(CreateUserRequestDto createUserRequestDto) {
 
-		if (createUserRequestDto.getEmail()!=null && userDao.findByEmailOrMobile(createUserRequestDto.getEmail()) != 0)
+		if (createUserRequestDto.getEmail() != null
+				&& userDao.findByEmailOrMobile(createUserRequestDto.getEmail()) != 0)
 			throw new EmailAlreadyExistException("Some one already registered with this email");
 
 		if (userDao.findByEmailOrMobile(createUserRequestDto.getMobile()) != 0)
@@ -83,8 +82,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String getFirstName(String token) {
-		Long id = jwtTokenUtil.getUserId(token);
-		return userDao.getFirstName(id);
+		Long userId = jwtTokenUtil.getUserId(token);
+		return userDao.getFirstName(userId);
 	}
 
 	@Override
