@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface UserServiceProxy {
 
 	@PostMapping("/users/get-first-name")
-	public ResponseEntity<String> getFirstName(@RequestBody String token);
+	public ResponseEntity<String> getFirstName(@RequestBody Long userId);
 
 }

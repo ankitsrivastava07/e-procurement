@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import jwtsession.constant.TokenStatusConstant;
 import jwtsession.controller.TokenStatus;
@@ -49,30 +52,55 @@ public class JwtSessionServiceImpl implements JwtSessionService {
 
 			if (jwtSessionToken != null) {
 
-				jwtAccessTokenUtil.validateToken(jwtSessionToken.getRefreshToken());
+				jwtRefreshTokenUtil.validateToken(jwtSessionToken.getRefreshToken());
 
-				accessToken = jwtAccessTokenUtil.generateAccessToken(jwtSessionToken.getId());
+				accessToken = jwtAccessTokenUtil.generateAccessToken(jwtSessionToken.getUserId());
 
-				String refreshToken = jwtRefreshTokenUtil.generateRefreshToken(jwtSessionToken.getId());
+				String refreshToken = jwtRefreshTokenUtil.generateRefreshToken(jwtSessionToken.getUserId());
 
 				jwtSessionToken.setAccessToken(accessToken);
 
 				jwtSessionToken.setRefreshToken(refreshToken);
 
 				repository.save(jwtSessionToken);
-
 			}
+
+			else {
+				tokenStatus.setStatus(TokenStatusConstant.FALSE);
+				tokenStatus.setMessage("Your session have been expired. Please login again");
+				return tokenStatus;
+			}
+
 		}
+
 		tokenStatus.setStatus(TokenStatusConstant.TRUE);
 		tokenStatus.setMessage(TokenStatusConstant.MESSAGE);
 		tokenStatus.setAccessToken(accessToken);
 
-		jwtAccessTokenUtil.validateToken(accessToken);
-
-		String firstName = userServiceProxy.getFirstName(accessToken).getBody();
+		String firstName = getFirstName(jwtAccessTokenUtil.getUserId(accessToken));
 		tokenStatus.setFirstName(firstName);
+
 		return tokenStatus;
 
+	}
+
+	public TokenStatus defaultResponseFallbackMethod(String accessToken) {
+
+		TokenStatus tokenStatus = new TokenStatus();
+		System.out.println("defaultResponseFallbackMethod");
+		tokenStatus.setStatus(TokenStatusConstant.FALSE);
+		tokenStatus.setMessage("Sorry Server is currently down.Please try again later");
+		tokenStatus.setAccessToken(accessToken);
+		return tokenStatus;
+	}
+
+	@HystrixCommand(fallbackMethod = "defaultResponseFallbackMethod", commandProperties = {
+			@HystrixProperty(name = "command.default.execution.timeout.enabled:", value = "true"),
+			@HystrixProperty(name = "hystrix.command.default.execution.timeout.enabled", value = "true"),
+			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1") })
+	public String getFirstName(Long userId) {
+		String firstName = userServiceProxy.getFirstName(userId).getBody();
+		return firstName;
 	}
 
 	@Override

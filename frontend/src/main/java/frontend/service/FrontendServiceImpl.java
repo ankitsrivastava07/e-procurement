@@ -3,14 +3,20 @@ package frontend.service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import frontend.controller.ChangePasswordRequestDto;
-import frontend.controller.LoginStatus;
 
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+
+import frontend.controller.ChangePasswordRequestDto;
+
+@DefaultProperties(defaultFallback = "defaultFallbackMethodHandleRequest")
 @Service
 public class FrontendServiceImpl implements FrontendService {
 
@@ -18,7 +24,7 @@ public class FrontendServiceImpl implements FrontendService {
 	private ApiGatewayRequestUri apiGatewayRequestUri;
 
 	@Override
-	public void setCookie(HttpServletRequest request, HttpServletResponse response, LoginStatus status) {
+	public void setCookie(HttpServletRequest request, HttpServletResponse response, String token) {
 
 		Cookie cookies[] = request.getCookies();
 
@@ -27,12 +33,12 @@ public class FrontendServiceImpl implements FrontendService {
 			for (Cookie cookie : cookies)
 
 				if (cookie.getName().equalsIgnoreCase("session_Token")) {
-					cookie.setValue(status.getToken());
-					response.addCookie(cookie);
+					cookie.setValue(token);
+					cookie.setPath("/");
 					return;
 				}
 
-		Cookie cookie = new Cookie("session_Token", status.getToken());
+		Cookie cookie = new Cookie("session_Token", token);
 
 		response.addCookie(cookie);
 
@@ -54,7 +60,8 @@ public class FrontendServiceImpl implements FrontendService {
 		return userName;
 	}
 
-	public TokenStatus isValidToken(HttpServletRequest request) {
+	//@HystrixCommand(fallbackMethod = "defaultFallbackMethodHandleRequest")
+	public TokenStatus isValidToken(HttpServletRequest request, HttpServletResponse response) {
 
 		String token = getToken(request);
 
@@ -63,6 +70,9 @@ public class FrontendServiceImpl implements FrontendService {
 		if (Objects.nonNull(token) && !token.isEmpty()) {
 
 			tokenStatus = apiGatewayRequestUri.isValidToken(token).getBody();
+
+			if (tokenStatus.isStatus())
+				setCookie(request, response, tokenStatus.getAccessToken());
 
 			return tokenStatus;
 		}
@@ -118,6 +128,11 @@ public class FrontendServiceImpl implements FrontendService {
 		TokenStatus tokenStatus = apiGatewayRequestUri.invalidateTokens(dto).getBody();
 
 		return tokenStatus;
+	}
+
+	public String defaultFallbackMethodHandleRequest() {
+
+		return "redirect:/error";
 	}
 
 }

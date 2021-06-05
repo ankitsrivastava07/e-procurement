@@ -35,8 +35,8 @@ public class UserController {
 	}
 
 	@PostMapping("/get-first-name")
-	public String getFirstName(@RequestBody String token) {
-		return userService.getFirstName(token);
+	public String getFirstName(@RequestBody Long userId) {
+		return userService.getFirstName(userId);
 	}
 
 	@PostMapping("/change-password")

@@ -13,9 +13,6 @@ public class JwtSessionDaoImpl implements JwtSessionDao {
 	@Autowired
 	JwtSessionRepository repository;
 
-	@Autowired
-	TokenStatus tokenStatus;
-
 	@Override
 	public JwtSessionEntity findByAccessToken(String refreshToken) {
 		return repository.findByAccessToken(refreshToken);

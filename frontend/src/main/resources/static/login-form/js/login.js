@@ -62,7 +62,7 @@ function login(formData) {
 		$.ajax({
 
 			type: "POST",
-			url: "/login",
+			url: "/signin",
 			contentType: "application/json",
 			data: JSON.stringify(formData),
 			cache: false,

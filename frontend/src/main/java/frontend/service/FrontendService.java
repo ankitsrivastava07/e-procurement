@@ -7,9 +7,9 @@ import frontend.controller.LoginStatus;
 
 public interface FrontendService {
 
-	void setCookie(HttpServletRequest request, HttpServletResponse response, LoginStatus token);
+	void setCookie(HttpServletRequest request, HttpServletResponse response, String token);
 
-	TokenStatus isValidToken(HttpServletRequest request);
+	TokenStatus isValidToken(HttpServletRequest request,HttpServletResponse response);
 
 	void invalidateToken(HttpServletRequest request);
 

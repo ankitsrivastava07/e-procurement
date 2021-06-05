@@ -90,20 +90,30 @@ $(document).ready(function() {
 				data: JSON.stringify(formData),
 				cache: false,
 				success: function(response) {
-					$(".error").remove();
 
-					$(".alert").remove();
 					setTimeout(function() {
-						$.each(response.errorMessage, function(key, value) {
-							var span = $('<span />').addClass(key + '-error error').html(value);
-							$("#" + key).after(span);
-						});
+						var len = $(".input-group span").length;
+
+						if ($(".input-group span").length == 0 || $(".input-group span").length == undefined) {
+							$(".error").remove();
+
+							$.each(response.errorMessage, function(key, value) {
+								var span = $('<span />').addClass(key + '-error error').html(value);
+								$("#" + key).after(span);
+							});
+						} else {
+							$("#" + key).html(value);
+						}
 					}, 500);
+
 					if (response.status) {
 						$('#signup-form')[0].reset();
 						alert("Successfully Registered your account please proceed to login");
-						window.location.href = "/login"
+						window.location.href = "/signin"
 					}
+				},
+				complete: function() {
+					$(".error").remove();
 				},
 				error: function(error) {
 					alert("Something went wrong please try again later")
@@ -112,4 +122,10 @@ $(document).ready(function() {
 		}
 	}
 
+});
+
+$(document).ready(function() {
+	$('#email,#mobile').keyup(function() {
+		$(".error").remove();
+	});
 });

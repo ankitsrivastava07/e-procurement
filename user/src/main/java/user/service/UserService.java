@@ -13,7 +13,7 @@ public interface UserService {
 
 	void findByEmailOrMobile(CreateUserRequestDto createUserRequestDto);
 
-	String getFirstName(String token);
+	String getFirstName(Long userId);
 
 	ChangePasswordResponseStatus changePassword(ChangePasswordRequestDto changePasswordRequest);
 

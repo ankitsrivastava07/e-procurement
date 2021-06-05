@@ -52,7 +52,7 @@ background-color: #fdf6f6;
 	</style>
 	
 	<body>
-<form id="login-form" method="post" name="login-form">
+<form id="login-form" method="post" name="login-form" autocomplete="on">
 	<section class="ftco-section">
 		<div class="container">
 			<div class="row justify-content-center">
@@ -65,19 +65,19 @@ background-color: #fdf6f6;
 		      	<div class="icon d-flex align-items-center justify-content-center">
 		      		<i class="fa fa-user-o text-light" aria-hidden="true"></i>
 		      	</div>
-		      	<h3 class="text-center mb-4">Login</h3>
+		      	<h3 class="text-center mb-4">Sign in</h3>
 			<div class="modal-body" id="modal1-body">
 			
-			<#if tokenStatus?? && tokenStatus.message?has_content>
-			<div class="alert alert-danger" role="alert"> ${tokenStatus.message} </div>
+			<#if message?? && message?has_content>
+			<div class="alert alert-danger" role="alert"> ${message} </div>
 			</#if>
 		      		<div class="form-group">
 		      		<label for="recipient-name" class="col-form-label">Email or Mobile number</label>
-		      			<input type="text" class="form-control rounded-left" maxlength="30" name="email" id="email" autocomplete=off Placeholder="Enter your email/mobile number">
+		      			<input type="text" class="form-control rounded-left" maxlength="30" name="email" id="email" autocomplete=on Placeholder="Enter your email/mobile number">
 		      		</div>
 	            <div class="form-group">
 	            <label for="recipient-name" class="col-form-label">Password</label>
-	              <input type="password" class="form-control rounded-left" maxlength="20" name="password" id="password" Placeholder="Enter your password">
+	              <input type="password" class="form-control rounded-left" maxlength="20" name="password" id="password" autocomplete=on Placeholder="Enter your password">
 	            </div>
 	            <div class="form-group">
 	            	<button type="submit" class="form-control btn btn-primary rounded submit px-3">Login</button>

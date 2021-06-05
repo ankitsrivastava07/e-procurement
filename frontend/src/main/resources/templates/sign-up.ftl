@@ -71,13 +71,13 @@ input[type=number] {
 							<div class="col-2">
 								<div class="input-group">
 									<label class="label">first name</label> <input
-										class="input--style-4" type="text" name="firstName" maxlength="100" id="firstName">
+										class="input--style-4" type="text" name="firstName" autocomplete="on" maxlength="100" id="firstName">
 								</div>
 							</div>
 							<div class="col-2">
 								<div class="input-group">
 									<label class="label">last name</label> <input
-										class="input--style-4" type="text" name="lastName" maxlength="100" id="lastName">
+										class="input--style-4" type="text" name="lastName" autocomplete="on" maxlength="100" id="lastName">
 								</div>
 							</div>
 						</div>
@@ -86,7 +86,7 @@ input[type=number] {
 							<div class="col-2">
 								<div class="input-group">
 									<label class="label">Mobile Number</label> <input
-										class="input--style-4" type="number" id="mobile" name="mobile">
+										class="input--style-4" type="number" id="mobile" autocomplete="on" name="mobile">
 										
 								</div>
 							</div>
@@ -94,7 +94,7 @@ input[type=number] {
 							<div class="col-2">
 								<div class="input-group">
 									<label class="label">Email(Optional)</label> <input
-										class="input--style-4" type="email" id="email" name="email">
+										class="input--style-4" type="email" id="email" autocomplete="on" name="email">
 								</div>
 
 							</div>
@@ -103,7 +103,7 @@ input[type=number] {
 								<div class="col-2">
 									<div class="input-group">
 										<label class="label">Password</label> <input
-											class="input--style-4" type="password" minlength="8" id="password"
+											class="input--style-4" type="password" autocomplete=on minlength="8" id="password"
 											name="password" maxlength="20">
 									</div>
 								</div>
@@ -111,7 +111,7 @@ input[type=number] {
 							<div class="p-t-15">
 									<button class="btn btn--radius-2 btn--blue" id="submit" type="submit">Submit</button>
 									<span class="align-right">Alredy have an account 
-									<a href="/login">Login</button></span>
+									<a href="/signin">Sign in</button></span>
 							</div>
 					</form>
 				</div>

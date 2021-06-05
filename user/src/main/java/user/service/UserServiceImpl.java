@@ -7,6 +7,8 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+
 import user.configure.JwtTokenUtil;
 import user.constant.ResponseStatus;
 import user.controller.ChangePasswordRequestDto;
@@ -44,6 +46,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@HystrixCommand(ignoreExceptions = InvalidCredentialException.class,fallbackMethod = "defaultResponseFallbackMethod")
 	public LoginStatus findByEmailAndPassword(String email, String password) {
 
 		isUserBlocked(email);
@@ -55,15 +58,23 @@ public class UserServiceImpl implements UserService {
 
 		TokenStatus tokenStatus = jwtSessionServiceProxy.generateToken(entity.getId()).getBody();
 
-		String firstName = getFirstName(tokenStatus.getAccessToken());
-
 		LoginStatus loginStatus = new LoginStatus();
 
 		loginStatus.setStatus(ResponseStatus.TRUE);
 		loginStatus.setMessage(ResponseStatus.MESSAGE);
 
 		loginStatus.setToken(tokenStatus.getAccessToken());
-		loginStatus.setFirstName(firstName);
+		loginStatus.setFirstName(tokenStatus.getFirstName());
+
+		return loginStatus;
+	}
+
+	public LoginStatus defaultResponseFallbackMethod(String email, String password) {
+
+		LoginStatus loginStatus = new LoginStatus();
+
+		loginStatus.setStatus(ResponseStatus.FALSE);
+		loginStatus.setMessage("Sorry Server is currently down.Please try again later");
 
 		return loginStatus;
 	}
@@ -81,12 +92,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String getFirstName(String token) {
-		Long userId = jwtTokenUtil.getUserId(token);
+	public String getFirstName(Long userId) {
 		return userDao.getFirstName(userId);
 	}
 
 	@Override
+	@HystrixCommand(fallbackMethod = "defaultResponseFallbackMethod")
 	public ChangePasswordResponseStatus changePassword(ChangePasswordRequestDto dto) {
 
 		Map<String, String> map = dto.getToken();

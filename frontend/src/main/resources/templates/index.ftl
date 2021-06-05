@@ -84,14 +84,14 @@
 								<li><a href="/"><i class="fa fa-shopping-cart"></i> Cart</a></li>
 							<#if userName?has_content>
 						<li class="dropdown1">
-						<a href="/login"><i class="fa fa-angle-down"></i>Hello, Ankit</a>
+						<a href="/signin"><i class="fa fa-angle-down"></i>Hello, Ankit</a>
                                     <ul role="menu" class="sub-menu" id="menu">
                                         <li><a href="/signout">Sign out</a></li>
 										<li><a href="/change-password">Change password</a></li> 
 										<li><a href="/signout-from-alldevices">Sign out from all device</a></li> 
                                     </ul>
                               <#else>
-                              <li><a href="/login">Sign in</a></li>
+                              <li><a href="/signin">Sign in</a></li>
                               <li><a href="/register">Sign up</a></li>      
 							</#if>
 							</li>

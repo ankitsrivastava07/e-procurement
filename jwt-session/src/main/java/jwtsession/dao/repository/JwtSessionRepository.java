@@ -8,8 +8,8 @@ import jwtsession.dao.entity.JwtSessionEntity;
 
 public interface JwtSessionRepository extends JpaRepository<JwtSessionEntity, Long> {
 
-	@Query(value = "select * from token_session where refresh_token = ?1 ", nativeQuery = true)
-	JwtSessionEntity findByAccessToken(String refreshToken);
+	@Query(value = "select * from token_session where access_token = ?1 ", nativeQuery = true)
+	JwtSessionEntity findByAccessToken(String accessToken);
 
 	@Modifying
 	@Query(value = "delete from token_session where not refresh_token = ?1 and user_id = ?2 ", nativeQuery = true)
@@ -20,6 +20,6 @@ public interface JwtSessionRepository extends JpaRepository<JwtSessionEntity, Lo
 	void removeAllTokensById(Long userId);
 
 	@Modifying
-	@Query(value = "delete from token_session where refresh_token = ?1", nativeQuery = true)
-	Integer removeToken(String refreshToken);
+	@Query(value = "delete from token_session where access_token = ?1", nativeQuery = true)
+	Integer removeToken(String accessToken);
 }
