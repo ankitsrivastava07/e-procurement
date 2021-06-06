@@ -53,9 +53,6 @@ public class UserDaoImpl implements UserDao {
 
 		Optional<LoginEntity> entity = loginRepository.findById(id);
 
-		if (entity.isEmpty())
-			throw new EmailAlreadyExistException("User not found Exception");
-
 		LoginEntity loginEntity = entity.get();
 
 		loginEntity.setOldPassword(loginEntity.getNewPassword());
